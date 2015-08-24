@@ -31,7 +31,13 @@ public class DBManager {
 
     public void init(Context context) {
 
-        if(helper == null) helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        if(helper == null) {
+
+            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+            helper.getWritableDatabase();
+        }
+
+
 
 
     }

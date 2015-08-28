@@ -23,12 +23,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import by.minsk.pipe.creditcalc.DB.DBManager;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.DB.DatabaseHelper;
+import by.minsk.pipe.creditcalc.Logic.OnRateListener;
 import by.minsk.pipe.creditcalc.models.Rate;
 
 /**
  * Created by gerasimenko on 26.08.2015.
  */
-public class XMLconnect extends AsyncTask <Date,Void,Void> {
+public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
 
     private String belRateUrl = "http://www.nbrb.by/Services/XmlExRates.aspx?ondate=";
     private String belVatUrl = "http://www.nbrb.by/Services/XmlRefRate.aspx?ondate=";
@@ -42,7 +43,12 @@ public class XMLconnect extends AsyncTask <Date,Void,Void> {
     private final static String USD_ID = "145";
     private final static String EU_ID = "19";
 
+    private OnRateListener listener;
     private Rate rate;
+
+    public XMLconnect(OnRateListener listener) {
+        this.listener = listener;
+    }
 
     private void loadRate(String date) {
         try {
@@ -132,7 +138,7 @@ public class XMLconnect extends AsyncTask <Date,Void,Void> {
     }
 
     @Override
-    protected Void doInBackground(Date... params) {
+    protected Rate doInBackground(Date... params) {
         Date date = params[0];
         if (date != null) {
             String sDate = convert(date);
@@ -141,12 +147,26 @@ public class XMLconnect extends AsyncTask <Date,Void,Void> {
 
             loadRate(sDate);
             loadVat(sDate);
+        }
+        return rate;
+    }
 
-            if (!DBservice.compareLastRecRate(rate)) {
+    @Override
+    protected void onPostExecute(Rate rate) {
+        Rate lastRate = DBservice.getLastRate();
+        if (lastRate == null && rate == null) {
+            listener.getRate(Rate.empty());
+        } else if (lastRate != null && rate == null) {
+            listener.getRate(lastRate);
+        } else if (lastRate == null && rate != null) {
+            listener.getRate(rate);
+        } else {
+            if (!rate.equals(lastRate)) {
                 DBservice.putRate(rate);
                 Log.d("Connection","Put to DB: " + rate.toString());
-            } else Log.d("Connection","Not new data: " + rate.toString());
+            }else Log.d("Connection", "Not new data: " + rate.toString());
+            listener.getRate(rate);
         }
-        return null;
+        super.onPostExecute(rate);
     }
 }

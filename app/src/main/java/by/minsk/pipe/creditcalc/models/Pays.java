@@ -4,6 +4,8 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+
 /**
  * Created by gerasimenko on 24.08.2015.
  */
@@ -12,25 +14,31 @@ public class Pays {
     @DatabaseField(generatedId = true) private int id;
     @DatabaseField(dataType = DataType.LONG) private long date;
 
-    @DatabaseField(dataType = DataType.INTEGER) private int balance;
-    @DatabaseField(dataType = DataType.INTEGER) private int pay;
+    @DatabaseField(foreign = true) private LendigTerms lendigTerms;
 
-    public void newRecord(long date,int balance,int pay) {
+    @DatabaseField(dataType = DataType.DOUBLE) private double balance;
+    @DatabaseField(dataType = DataType.DOUBLE) private double pay;
+    @DatabaseField(dataType = DataType.DOUBLE) private double overpayment;
 
-        this.date = date;
+
+    public void newRecord(double balance,double pay,double overpayment) {
+
         this.balance = balance;
         this.pay = pay;
+        this.overpayment = overpayment;
+        date = new Date().getTime();
     }
 
-    public int getBalance() {
+
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public int getPay() {
+    public double getPay() {
         return pay;
     }
 
@@ -52,5 +60,25 @@ public class Pays {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getOverpayment() {
+        return overpayment;
+    }
+
+    public void setOverpayment(double overpayment) {
+        this.overpayment = overpayment;
+    }
+
+    public LendigTerms getLendigTerms() {
+        return lendigTerms;
+    }
+
+    public void setLendigTerms(LendigTerms lendigTerms) {
+        this.lendigTerms = lendigTerms;
+    }
+
+    public static Pays empty() {
+        return new Pays();
     }
 }

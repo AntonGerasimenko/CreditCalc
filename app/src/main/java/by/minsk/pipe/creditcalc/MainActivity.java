@@ -37,10 +37,10 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                Calendar calendar = Calendar.getInstance();
+
                 //calendar.add(Calendar.DATE, 1);
 
-                new XMLconnect().execute(calendar.getTime());
+                //new XMLconnect().execute(calendar.getTime());
             }
         });
     }

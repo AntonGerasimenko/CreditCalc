@@ -86,4 +86,11 @@ public class Rate {
     public String toString() {
         return "USD = "+usaRate+" EU = "+euRate+" VAT = "+vat;
     }
+
+
+    public static Rate empty(){
+
+
+        return new Rate();
+    }
 }

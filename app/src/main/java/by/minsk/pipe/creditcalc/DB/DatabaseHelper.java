@@ -10,6 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
+import by.minsk.pipe.creditcalc.models.LendigTerms;
 import by.minsk.pipe.creditcalc.models.Pays;
 import by.minsk.pipe.creditcalc.models.Rate;
 
@@ -21,6 +22,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private Dao<Rate, String> rateDao = null;
     private Dao<Pays, String> paysDao = null;
+    private Dao<LendigTerms, String> lendigTermsesDao = null;
 
     private static final String DATABASE_NAME = "CreditCalc.db";
 
@@ -33,17 +35,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Rate.class);
             TableUtils.createTable(connectionSource, Pays.class);
+            TableUtils.createTable(connectionSource, LendigTerms.class);
         } catch (SQLException e) {
             throw new RuntimeException(e); }
     }
     /** * This is called when your application is upgraded and it has a higher version number. This allows you to adjust * the various data to match the new version number. */
     @Override public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, Rate.class, true); // after we drop the old databases, we create the new ones onCreate(db, connectionSource);
-            TableUtils.dropTable(connectionSource, Pays.class, true); // after we drop the old databases, we create the new ones onCreate(db, connectionSource);
+            TableUtils.dropTable(connectionSource, Rate.class, true);
+            TableUtils.dropTable(connectionSource, Pays.class, true);
+            TableUtils.dropTable(connectionSource, LendigTerms.class, true);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override public void close() {
+        super.close();
+        rateDao = null;
+        paysDao = null;
+        lendigTermsesDao = null;
     }
 
     public Dao<Rate, String> getRateDao() throws SQLException {
@@ -61,9 +72,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return paysDao;
     }
 
+    public Dao<LendigTerms,String> getLendingTermsDao() throws SQLException{
+        if (paysDao == null) {
 
-    @Override public void close() {
-        super.close();
-        rateDao = null;
+            lendigTermsesDao = getDao(LendigTerms.class);
+        }
+        return lendigTermsesDao;
     }
 }

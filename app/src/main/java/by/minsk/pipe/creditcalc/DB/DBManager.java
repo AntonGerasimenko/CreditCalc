@@ -23,22 +23,13 @@ public class DBManager {
     private DBManager() {
     }
 
-
     public void release() {
-
         if (helper != null) OpenHelperManager.releaseHelper();
     }
 
     public void init(Context context) {
-
         if(helper == null) {
-
             helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
-            helper.getWritableDatabase();
         }
-
-
-
-
     }
 }

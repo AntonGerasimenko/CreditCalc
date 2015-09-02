@@ -3,4 +3,40 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+
+    <string name="balance">Баланс</string>
+    <string name="next_pay">Следующий платеж</string>
+    <string name="make_pay">Добавить платеж</string>
+    <string name="overpay">Переплата</string>
+
+
+
+    <string name="make_credit">Добавить</string>
+    <string name="summ">Суммма</string>
+    <string name="term">Срок</string>
+    <string name="percent">Годовой процент</string>
+    <string name="credit_target">Цель кредита</string>
+
+    <string name="use_refin_rate">Учитывать ставку рефинансирования</string>
+
+
+    <string name="err_credit_null">Введите сумму кредита.</string>
+    <string name="err_term_null">Введите срок кредита.</string>
+    <string name="err_interest_rate_null">Введите процент кредита.</string>
+
+
+
+
+
+    <string name="pay_is_small">Платеж слишком мал</string>
+
+    <string-array name="currency" >
+        <item>$</item>
+        <item>€</item>
+        <item>₱</item>
+        <item>р</item>
+        <item>₴</item>
+    </string-array>
+
 </resources>

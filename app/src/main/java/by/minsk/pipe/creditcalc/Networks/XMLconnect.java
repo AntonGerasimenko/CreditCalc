@@ -143,7 +143,7 @@ public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
         if (date != null) {
             String sDate = convert(date);
             rate = new Rate();
-            rate.setDate(date.toString());
+            rate.setDate(date.getTime());
 
             loadRate(sDate);
             loadVat(sDate);

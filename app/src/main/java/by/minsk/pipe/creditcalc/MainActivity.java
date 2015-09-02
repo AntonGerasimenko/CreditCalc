@@ -1,27 +1,34 @@
 package by.minsk.pipe.creditcalc;
 
 import android.graphics.Color;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
 
-import java.util.Calendar;
-import java.util.Date;
+
+import com.github.mikephil.charting.charts.PieChart;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import by.minsk.pipe.creditcalc.Networks.KSOAPconnect;
-import by.minsk.pipe.creditcalc.Networks.XMLconnect;
+import by.minsk.pipe.creditcalc.Fragments.CalcPay;
+import by.minsk.pipe.creditcalc.Fragments.CreditList;
+import by.minsk.pipe.creditcalc.Fragments.MakeCredit;
+import by.minsk.pipe.creditcalc.Fragments.PieChartFr;
+import by.minsk.pipe.creditcalc.Logic.Actual;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
-    @InjectView(R.id.button)  Button button;
-    private PieChart mChart;
+
+    private Actual actual = new Actual();
+
+    @InjectView(R.id.button1) Button btnMake;
+    @InjectView(R.id.button2) Button btnAdd;
+    @InjectView(R.id.button3) Button btnList;
+    @InjectView(R.id.button4) Button btnPie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,43 +36,30 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-
-
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                //calendar.add(Calendar.DATE, 1);
-
-                //new XMLconnect().execute(calendar.getTime());
-            }
-        });
+        btnMake.setOnClickListener(this);
+        btnAdd.setOnClickListener(this);
+        btnList.setOnClickListener(this);
+        btnPie.setOnClickListener(this);
     }
 
-    private void pieChart(){
+    @Override
+    public void onClick(View v) {
 
-        mChart = (PieChart) findViewById(R.id.chart1);
-
-        mChart.setUsePercentValues(true);
-        mChart.setDragDecelerationFrictionCoef(0.95f);
-        mChart.setDrawHoleEnabled(true);
-        mChart.setHoleColorTransparent(true);
-
-        mChart.setTransparentCircleColor(Color.WHITE);
-        mChart.setTransparentCircleAlpha(110);
-
-        mChart.setHoleRadius(58f);
-        mChart.setTransparentCircleRadius(61f);
-
-        mChart.setDrawCenterText(true);
-
-        mChart.setRotationAngle(0);
-        // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
-
-        mChart.setCenterText("Hello");
+        switch (v.getId()) {
+            case R.id.button1:
+                getFragmentManager().beginTransaction().replace(R.id.temp_container, new MakeCredit(),MakeCredit.TAG).commit();
+                break;
+            case R.id.button2:
+                getFragmentManager().beginTransaction().replace(R.id.temp_container, CalcPay.newInstance(actual),CalcPay.TAG).commit();
+                break;
+            case R.id.button3:
+                getFragmentManager().beginTransaction().replace(R.id.temp_container, new CreditList(),CreditList.TAG).commit();
+                break;
+            case R.id.button4:
+                getFragmentManager().beginTransaction().replace(R.id.temp_container, new PieChartFr(),PieChartFr.TAG).commit();
+                break;
+        }
     }
 }
+
+

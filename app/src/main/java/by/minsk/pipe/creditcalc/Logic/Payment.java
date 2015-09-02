@@ -5,8 +5,8 @@ import java.util.Date;
 
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
-import by.minsk.pipe.creditcalc.models.LendigTerms;
-import by.minsk.pipe.creditcalc.models.Pays;
+import by.minsk.pipe.creditcalc.models.LendingTerms;
+import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
 /**
@@ -15,12 +15,17 @@ import by.minsk.pipe.creditcalc.models.Rate;
 public class Payment {
 
     public final static int DAYS_IN_YEAR = 365;
-    private Actual actual = new Actual();
+    private Actual actual;
+
+    public Payment(Actual actual) {
+        this.actual = actual;
+    }
 
     public void makePayment(double sum) throws IsTooSmall {
 
-        double overpayment = sum - getMinPayment();
-        checkLoanRepayment();
+        Pay pay = actual.getPay();
+        double overpayment = sum - getMinPayment(pay);
+
         if (overpayment > -1) {
 
             DBservice.createPayment(sum,overpayment);
@@ -29,37 +34,42 @@ public class Payment {
 
     public double getMinPayment() {
 
-        Pays pays = actual.getPay();
-
-        int lastPayDays = (int) periodDays(pays.getDate());
-
-        return interestPayment(pays,lastPayDays) + debtPayment(pays,lastPayDays);
+        return getMinPayment(actual.getPay());
     }
 
-    private double interestPayment(Pays pays,int days) {
+    private double getMinPayment(Pay pay) {
 
-        double balance = pays.getBalance();
-        double rate = checkRate(pays.getLendigTerms());
+
+
+        int lastPayDays = (int) periodDays(pay.getDate());
+
+        return interestPayment(pay,lastPayDays) + debtPayment(pay,lastPayDays);
+    }
+
+    private double interestPayment(Pay pay,int days) {
+
+        double balance = pay.getBalance();
+        double rate = checkRate(pay.getLendingTerms());
 
         return balance/100*rate/DAYS_IN_YEAR*days;
     }
 
-    private double debtPayment(Pays pays, int days) {
+    private double debtPayment(Pay pay, int days) {
 
-        LendigTerms lendigTerms = pays.getLendigTerms();
+        LendingTerms lendingTerms = pay.getLendingTerms();
 
-        double balance = pays.getBalance();
-        int daysBeforeClosure = (int) periodDays(lendigTerms.getEndLendingData());
+        double balance = pay.getBalance();
+        int daysBeforeClosure = (int) periodDays(lendingTerms.getEndLendingData());
 
         return balance/daysBeforeClosure*days;
     }
 
-    private double checkRate(LendigTerms lendigTerms) {
-        if (lendigTerms.isUseVat()) {
+    private double checkRate(LendingTerms lendingTerms) {
+        if (lendingTerms.isUseVat()) {
             Rate rate = actual.getRateInDB();
-            return rate.getVat() + lendigTerms.getInterestRate();
+            return rate.getVat() + lendingTerms.getInterestRate();
         } else {
-            return lendigTerms.getInterestRate();
+            return lendingTerms.getInterestRate();
         }
     }
 
@@ -72,3 +82,4 @@ public class Payment {
     }
 }
 
+//todo переплата окончательного кредита рассмотреть при получении записей с БД.

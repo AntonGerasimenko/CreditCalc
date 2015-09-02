@@ -7,7 +7,8 @@ import java.util.List;
 import by.minsk.pipe.creditcalc.DB.DBManager;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Networks.XMLconnect;
-import by.minsk.pipe.creditcalc.models.Pays;
+import by.minsk.pipe.creditcalc.models.Currency;
+import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
 
@@ -17,23 +18,24 @@ import by.minsk.pipe.creditcalc.models.Rate;
 public class Actual implements OnActual {
 
 
+
     @Override
-    public List<Pays> getAllPays() {
+    public List<Pay> getAllPays() {
         return null;
     }
 
     @Override
-    public Pays getPay() {
+    public Pay getPay() {
         try {
-            Pays pays = DBservice.getLastPay();
-            if (pays!= null) {
-                DBManager.getInstance().getHelper().getLendingTermsDao().refresh(pays.getLendigTerms());
+            Pay pay = DBservice.getLastPay();
+            if (pay != null) {
+                DBManager.getInstance().getHelper().getLendingTermsDao().refresh(pay.getLendingTerms());
+                return pay;
             }
-            return pays;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Pays.empty();
+        return Pay.empty();
     }
 
     @Override
@@ -48,4 +50,29 @@ public class Actual implements OnActual {
         return DBservice.getLastRate();
     }
 
+    public String getBalance(Currency currency) {
+
+        Rate rate = DBservice.getLastRate();
+        double curen = 1;
+        if (rate != null) {
+            switch (currency) {
+                case  USD:
+                    curen =  rate.getUsaRate();
+                    break;
+                case EU:
+                    curen =  rate.getEuRate();
+                    break;
+                case RUR:
+                case BYR:
+                case UA:
+                    break;
+            }
+            Pay pay = DBservice.getLastPay();
+            if (pay != null) {
+                double balance = pay.getBalance();
+                return String.valueOf(balance / curen);
+            }
+        }
+        return "0";
+    }
 }

@@ -13,14 +13,14 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Rate {
 
     @DatabaseField(generatedId = true) private int id;
-    @DatabaseField(dataType = DataType.STRING) private String date;
+    @DatabaseField(dataType = DataType.LONG) private long date;
 
     @DatabaseField(dataType = DataType.DOUBLE) private double usaRate;
     @DatabaseField(dataType = DataType.DOUBLE) private double euRate;
 
     @DatabaseField(dataType = DataType.DOUBLE) private double vat;
 
-    public void newRecord(String date, double usaRate, double euRate, double vat){
+    public void newRecord(long date, double usaRate, double euRate, double vat){
 
         this.date = date;
         this.usaRate = usaRate;
@@ -53,7 +53,7 @@ public class Rate {
     }
 
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
@@ -65,7 +65,7 @@ public class Rate {
         this.vat = vat;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -86,7 +86,6 @@ public class Rate {
     public String toString() {
         return "USD = "+usaRate+" EU = "+euRate+" VAT = "+vat;
     }
-
 
     public static Rate empty(){
 

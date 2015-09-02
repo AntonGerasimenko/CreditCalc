@@ -10,8 +10,8 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import by.minsk.pipe.creditcalc.models.LendigTerms;
-import by.minsk.pipe.creditcalc.models.Pays;
+import by.minsk.pipe.creditcalc.models.LendingTerms;
+import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
 /**
@@ -21,8 +21,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private Dao<Rate, String> rateDao = null;
-    private Dao<Pays, String> paysDao = null;
-    private Dao<LendigTerms, String> lendigTermsesDao = null;
+    private Dao<Pay, String> paysDao = null;
+    private Dao<LendingTerms, String> lendigTermsesDao = null;
 
     private static final String DATABASE_NAME = "CreditCalc.db";
 
@@ -34,8 +34,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, Rate.class);
-            TableUtils.createTable(connectionSource, Pays.class);
-            TableUtils.createTable(connectionSource, LendigTerms.class);
+            TableUtils.createTable(connectionSource, Pay.class);
+            TableUtils.createTable(connectionSource, LendingTerms.class);
         } catch (SQLException e) {
             throw new RuntimeException(e); }
     }
@@ -43,8 +43,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             TableUtils.dropTable(connectionSource, Rate.class, true);
-            TableUtils.dropTable(connectionSource, Pays.class, true);
-            TableUtils.dropTable(connectionSource, LendigTerms.class, true);
+            TableUtils.dropTable(connectionSource, Pay.class, true);
+            TableUtils.dropTable(connectionSource, LendingTerms.class, true);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -64,18 +64,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return rateDao;
     }
 
-    public Dao<Pays,String> getPaysDao() throws SQLException{
+    public Dao<Pay,String> getPaysDao() throws SQLException{
         if (paysDao == null) {
 
-            paysDao = getDao(Pays.class);
+            paysDao = getDao(Pay.class);
         }
         return paysDao;
     }
 
-    public Dao<LendigTerms,String> getLendingTermsDao() throws SQLException{
-        if (paysDao == null) {
+    public Dao<LendingTerms,String> getLendingTermsDao() throws SQLException{
+        if (lendigTermsesDao == null) {
 
-            lendigTermsesDao = getDao(LendigTerms.class);
+            lendigTermsesDao = getDao(LendingTerms.class);
         }
         return lendigTermsesDao;
     }

@@ -13,6 +13,7 @@
 
 
     <string name="make_credit">Добавить</string>
+    <string name="delete_credit">Удалить</string>
     <string name="summ">Суммма</string>
     <string name="term">Срок</string>
     <string name="percent">Годовой процент</string>

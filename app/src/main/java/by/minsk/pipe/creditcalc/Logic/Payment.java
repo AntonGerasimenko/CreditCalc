@@ -5,7 +5,7 @@ import java.util.Date;
 
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
-import by.minsk.pipe.creditcalc.models.LendingTerms;
+import by.minsk.pipe.creditcalc.models.Credit;
 import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
@@ -27,21 +27,17 @@ public class Payment {
         double overpayment = sum - getMinPayment(pay);
 
         if (overpayment > -1) {
-
-            DBservice.createPayment(sum,overpayment);
+            DBservice.pay().create(sum, overpayment);
         } else throw new IsTooSmall("Payment is too small");
     }
 
-    public double getMinPayment() {
+    public double getMinPayment(Pay pay) {
 
-        return getMinPayment(actual.getPay());
-    }
-
-    private double getMinPayment(Pay pay) {
-
-
-
-        int lastPayDays = (int) periodDays(pay.getDate());
+        long lastPayTime = pay.getDate();
+        if (lastPayTime == 0) {
+            lastPayTime = pay.getCredit().getStartData();
+        }
+        int lastPayDays = (int) periodDays(lastPayTime);
 
         return interestPayment(pay,lastPayDays) + debtPayment(pay,lastPayDays);
     }
@@ -49,34 +45,34 @@ public class Payment {
     private double interestPayment(Pay pay,int days) {
 
         double balance = pay.getBalance();
-        double rate = checkRate(pay.getLendingTerms());
+        double rate = checkRate(pay.getCredit());
 
         return balance/100*rate/DAYS_IN_YEAR*days;
     }
 
     private double debtPayment(Pay pay, int days) {
 
-        LendingTerms lendingTerms = pay.getLendingTerms();
+        Credit credit = pay.getCredit();
 
         double balance = pay.getBalance();
-        int daysBeforeClosure = (int) periodDays(lendingTerms.getEndLendingData());
+        int daysBeforeClosure = (int) periodDays(credit.getEndData());
 
         return balance/daysBeforeClosure*days;
     }
 
-    private double checkRate(LendingTerms lendingTerms) {
-        if (lendingTerms.isUseVat()) {
+    private double checkRate(Credit credit) {
+        if (credit.isUseVat()) {
             Rate rate = actual.getRateInDB();
-            return rate.getVat() + lendingTerms.getInterestRate();
+            return rate.getVat() + credit.getInterestRate();
         } else {
-            return lendingTerms.getInterestRate();
+            return credit.getInterestRate();
         }
     }
 
     private long periodDays (long end) {
 
         long now = new Date().getTime();
-        long diffTime = end - now;
+        long diffTime = now - end;
 
         return diffTime / (1000 * 60 * 60 * 24);
     }

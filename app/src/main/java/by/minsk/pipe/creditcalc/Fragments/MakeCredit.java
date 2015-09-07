@@ -19,7 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.LendingTerms;
+import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.models.Currency;
 import by.minsk.pipe.creditcalc.models.Pay;
 
 /**
@@ -37,7 +38,6 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
     @InjectView(R.id.use_refin_rate)   CheckBox useRefinRate;
     @InjectView(R.id.add_credit)  Button addCredit;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,25 +45,39 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
         ButterKnife.inject(this, view);
 
         addCredit.setOnClickListener(this);
-        //currency.setAdapter();
+
 
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        Pay pay = new Pay();
-        LendingTerms lendingTerms = new LendingTerms();
+
+        Credit credit = new Credit();
         long now  = new Date().getTime();
+        credit.setDate(now);
+        credit.setTarget(String.valueOf(targetCredit.getText()));
 
         double creditSumm =  Double.parseDouble(String.valueOf(summa.getText()));
         if (creditSumm == 0) {
             Toast.makeText(getActivity(),R.string.err_credit_null,Toast.LENGTH_LONG).show();
             return;
         }
-        pay.setBalance(creditSumm);
-        pay.setDate(now);
-        pay.setTarget(String.valueOf(targetCredit.getText()));
+        credit.setSumma(creditSumm);
+        credit.setCurrency(Currency.BYR.getInt());
+
+        String string = String.valueOf(percent.getText());
+        if (string.isEmpty()) {
+            Toast.makeText(getActivity(),R.string.err_interest_rate_null,Toast.LENGTH_LONG).show();
+            return;
+        }
+        credit.setInterestRate(check(string));
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -2);
+        credit.setStartData(calendar.getTimeInMillis());
+
 
         int year = (int) check(String.valueOf(endLendingData.getText()));
         if (year == 0) {
@@ -72,22 +86,13 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
         }
         Calendar nowCalendar = Calendar.getInstance();
         nowCalendar.add(Calendar.YEAR, year);
+        credit.setEndData(nowCalendar.getTimeInMillis());
 
-        lendingTerms.setDate(now);
-        lendingTerms.setEndLendingData(nowCalendar.getTimeInMillis());
-        lendingTerms.setStartLendingData(now);
+        credit.setUseRefinRate(useRefinRate.isChecked());
 
-        String string = String.valueOf(percent.getText());
-        if (string.isEmpty()) {
-            Toast.makeText(getActivity(),R.string.err_interest_rate_null,Toast.LENGTH_LONG).show();
-            return;
-        }
-        lendingTerms.setInterestRate(check(string));
-        lendingTerms.setUseRefinRate(useRefinRate.isChecked());
+        DBservice.credit().create(credit);
 
-        pay.setLendingTerms(lendingTerms);
-
-        DBservice.putPay(pay);
+        getFragmentManager().beginTransaction().remove(this).commit();
     }
 
     private double check(String string) {

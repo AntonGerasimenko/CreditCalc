@@ -12,24 +12,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.annotation.Annotation;
 import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
+import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
 import by.minsk.pipe.creditcalc.Exception.MakeNewCreditFault;
 import by.minsk.pipe.creditcalc.Logic.Actual;
 
-import by.minsk.pipe.creditcalc.Logic.Credit;
+import by.minsk.pipe.creditcalc.Logic.Convert;
+import by.minsk.pipe.creditcalc.Logic.CreditOperation;
 import by.minsk.pipe.creditcalc.Logic.Payment;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Currency;
+import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.models.Pay;
 
 /**
  * Created by gerasimenko on 31.08.2015.
@@ -39,23 +39,31 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
     public static final String TAG = "CalcPay";
 
     @InjectView(R.id.balance_currency_spinner) Spinner balanceCurrency;
-
-    @InjectView(R.id.balance)    TextView balance;
-    @InjectView(R.id.overpay)    TextView overpay;
-    @InjectView(R.id.next_pay)   EditText nextPay;
+    @InjectView(R.id.credit_target) TextView target;
+    @InjectView(R.id.termin)        TextView termin;
+    @InjectView(R.id.interest_rate) TextView intetestRate;
+    @InjectView(R.id.balance)       TextView balance;
+    @InjectView(R.id.overpay)       TextView overpay;
+    @InjectView(R.id.next_pay)      EditText nextPay;
 
     @InjectView(R.id.make_pay)   Button makePay;
 
     private Actual actual;
     private Payment payment;
+    private Pay lastPay;
 
-
-    public static CalcPay newInstance(@NonNull Actual actual) {
+    public static CalcPay newInstance(@NonNull Actual actual, int id) {
 
         CalcPay instance = new CalcPay();
         instance.actual = actual;
         instance.payment = new Payment(actual);
+        Pay pay = DBservice.pay().getLast(id);
 
+        if (pay.isEmpty()) {
+            Credit newCredit = DBservice.credit().get(id);
+            pay.setCredit(newCredit);
+        }
+        instance.lastPay = pay;
         return instance;
     }
 
@@ -66,22 +74,17 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
         View view = inflater.inflate(R.layout.calc_pay, container, false);
         ButterKnife.inject(this, view);
 
+        setValues();
 
         balanceCurrency.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.currency)));
-
         makePay.setOnClickListener(this);
-
-        double minPay = payment.getMinPayment();
-        nextPay.setText(String.valueOf(minPay));
 
         return  view;
     }
 
     @Override
     public void onClick(View v) {
-
-        Credit newCredit = new Credit();
-
+        CreditOperation newCredit = new CreditOperation();
 
         try {
             Date date = new Date(2020,07,22);
@@ -100,7 +103,7 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String currenc = (String) balanceCurrency.getItemAtPosition(position);
+       /* String currenc = (String) balanceCurrency.getItemAtPosition(position);
         Currency currency = Currency.getInstance(currenc);
         balance.setText(actual.getBalance(currency));
 
@@ -109,11 +112,33 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
         overpay.setText(text);
 
         text = String.valueOf(payment.getMinPayment());
-        nextPay.setText(text);
+        nextPay.setText(text);*/
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void setValues(){
+
+        Credit credit = lastPay.getCredit();
+
+        target.setText(credit.getTarget());
+        balance.setText(
+                Convert.money(
+                        lastPay.isEmpty() ?
+                                credit.getSumma() :
+                                lastPay.getBalance()
+                )
+        );
+
+        overpay.setText(Convert.money(lastPay.getOverpayment()));
+
+        String endData = Convert.date(lastPay.getCredit().getEndData());
+        termin.setText(endData);
+        intetestRate.setText(Convert.percent(lastPay.getCredit().getInterestRate()));
+
+        nextPay.setText(Convert.money(payment.getMinPayment(lastPay)));
     }
 }

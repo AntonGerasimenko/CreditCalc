@@ -10,7 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import by.minsk.pipe.creditcalc.models.LendingTerms;
+import by.minsk.pipe.creditcalc.models.Credit;
 import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
@@ -22,7 +22,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private Dao<Rate, String> rateDao = null;
     private Dao<Pay, String> paysDao = null;
-    private Dao<LendingTerms, String> lendigTermsesDao = null;
+    private Dao<Credit, String> creditDao = null;
 
     private static final String DATABASE_NAME = "CreditCalc.db";
 
@@ -35,7 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Rate.class);
             TableUtils.createTable(connectionSource, Pay.class);
-            TableUtils.createTable(connectionSource, LendingTerms.class);
+            TableUtils.createTable(connectionSource, Credit.class);
         } catch (SQLException e) {
             throw new RuntimeException(e); }
     }
@@ -44,7 +44,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Rate.class, true);
             TableUtils.dropTable(connectionSource, Pay.class, true);
-            TableUtils.dropTable(connectionSource, LendingTerms.class, true);
+            TableUtils.dropTable(connectionSource, Credit.class, true);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +54,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super.close();
         rateDao = null;
         paysDao = null;
-        lendigTermsesDao = null;
+        creditDao = null;
     }
 
     public Dao<Rate, String> getRateDao() throws SQLException {
@@ -72,11 +72,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return paysDao;
     }
 
-    public Dao<LendingTerms,String> getLendingTermsDao() throws SQLException{
-        if (lendigTermsesDao == null) {
+    public Dao<Credit,String> getCreditDao() throws SQLException{
+        if (creditDao == null) {
 
-            lendigTermsesDao = getDao(LendingTerms.class);
+            creditDao = getDao(Credit.class);
         }
-        return lendigTermsesDao;
+        return creditDao;
     }
 }

@@ -27,15 +27,15 @@ public class Actual implements OnActual {
     @Override
     public Pay getPay() {
         try {
-            Pay pay = DBservice.getLastPay();
+            Pay pay = DBservice.pay().getLast();
             if (pay != null) {
-                DBManager.getInstance().getHelper().getLendingTermsDao().refresh(pay.getLendingTerms());
+                DBManager.getInstance().getHelper().getCreditDao().refresh(pay.getCredit());
                 return pay;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Pay.empty();
+        return Pay.EMPTY;
     }
 
     @Override
@@ -47,12 +47,12 @@ public class Actual implements OnActual {
 
     public Rate getRateInDB(){
 
-        return DBservice.getLastRate();
+        return DBservice.rate().getLast();
     }
 
     public String getBalance(Currency currency) {
 
-        Rate rate = DBservice.getLastRate();
+        Rate rate = DBservice.rate().getLast();
         double curen = 1;
         if (rate != null) {
             switch (currency) {
@@ -67,7 +67,7 @@ public class Actual implements OnActual {
                 case UA:
                     break;
             }
-            Pay pay = DBservice.getLastPay();
+            Pay pay = DBservice.pay().getLast();
             if (pay != null) {
                 double balance = pay.getBalance();
                 return String.valueOf(balance / curen);

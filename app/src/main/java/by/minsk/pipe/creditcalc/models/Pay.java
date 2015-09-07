@@ -14,11 +14,20 @@ public class Pay {
     @DatabaseField(generatedId = true) private int id;
     @DatabaseField(dataType = DataType.LONG) private long date;
 
-    @DatabaseField(foreign = true) private LendingTerms lendingTerms;
-    @DatabaseField(dataType = DataType.STRING) private String target;
+    @DatabaseField(foreign = true) private Credit credit;
+    @DatabaseField(foreign = true) private Rate rate;
+
     @DatabaseField(dataType = DataType.DOUBLE) private double balance;
     @DatabaseField(dataType = DataType.DOUBLE) private double pay;
     @DatabaseField(dataType = DataType.DOUBLE) private double overpayment;
+
+    public static final Pay EMPTY;
+
+    static {
+        EMPTY = new Pay();
+        EMPTY.credit = Credit.empty();
+        EMPTY.rate = Rate.empty();
+    }
 
     public void newRecord(double balance,double pay,double overpayment) {
 
@@ -27,7 +36,6 @@ public class Pay {
         this.overpayment = overpayment;
         date = new Date().getTime();
     }
-
 
     public double getBalance() {
         return balance;
@@ -69,25 +77,23 @@ public class Pay {
         this.overpayment = overpayment;
     }
 
-    public LendingTerms getLendingTerms() {
-        return lendingTerms;
+    public Credit getCredit() {
+        return credit;
     }
 
-    public void setLendingTerms(LendingTerms lendingTerms) {
-        this.lendingTerms = lendingTerms;
+    public void setCredit(Credit credit) {
+        this.credit = credit;
     }
 
-    public static Pay empty() {
-        Pay pay = new Pay();
-        pay.lendingTerms = LendingTerms.empty();
-        return pay;
+    public  boolean isEmpty() {
+        return  this.equals(EMPTY);
     }
 
-    public String getTarget() {
-        return target;
+    public Rate getRate() {
+        return rate;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
+    public void setRate(Rate rate) {
+        this.rate = rate;
     }
 }

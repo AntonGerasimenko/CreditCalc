@@ -153,7 +153,7 @@ public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
 
     @Override
     protected void onPostExecute(Rate rate) {
-        Rate lastRate = DBservice.getLastRate();
+        Rate lastRate = DBservice.rate().getLast();
         if (lastRate == null && rate == null) {
             listener.getRate(Rate.empty());
         } else if (lastRate != null && rate == null) {
@@ -162,7 +162,7 @@ public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
             listener.getRate(rate);
         } else {
             if (!rate.equals(lastRate)) {
-                DBservice.putRate(rate);
+                DBservice.rate().put(rate);
                 Log.d("Connection","Put to DB: " + rate.toString());
             }else Log.d("Connection", "Not new data: " + rate.toString());
             listener.getRate(rate);

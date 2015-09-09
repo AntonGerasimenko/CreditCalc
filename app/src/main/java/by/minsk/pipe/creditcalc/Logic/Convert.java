@@ -2,6 +2,7 @@ package by.minsk.pipe.creditcalc.Logic;
 
 import android.provider.ContactsContract;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,9 +15,28 @@ public class Convert {
 
     public static String date(long date) {
 
+        long now = Calendar.getInstance().getTimeInMillis();
+        long diff = date - now;
+
+        String years = String.valueOf(diff/1000/60/60/24/365);
+
         calendar.setTime(new Date(date));
-        return calendar.get(Calendar.MONTH)+"."+ calendar.get(Calendar.YEAR);
+
+        int year = calendar.get(Calendar.MONTH)+1;
+
+        return years +" ("+ year+"."+ calendar.get(Calendar.YEAR) + ")";
     }
+
+    public static String nowDate(long date) {
+
+
+        calendar.setTime(new Date(date));
+
+        int year = calendar.get(Calendar.MONTH)+1;
+
+        return calendar.get(Calendar.DATE)+"."+year+"."+ calendar.get(Calendar.YEAR);
+    }
+
 
     public static String percent(double percent) {
 
@@ -25,8 +45,11 @@ public class Convert {
 
     public static String money(double money) {
 
+        if (money<0) money*=-1;
+        DecimalFormat df = new DecimalFormat("#.##");
 
-
-        return money + " ";
+        return df.format(money);
     }
+
+
 }

@@ -75,7 +75,7 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
 
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -2);
+        calendar.add(Calendar.MONTH, -1);//todo убрать это !!!!
         credit.setStartData(calendar.getTimeInMillis());
 
 

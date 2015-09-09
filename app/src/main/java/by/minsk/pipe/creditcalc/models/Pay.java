@@ -2,6 +2,7 @@ package by.minsk.pipe.creditcalc.models;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.types.NativeUuidType;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
@@ -21,12 +22,23 @@ public class Pay {
     @DatabaseField(dataType = DataType.DOUBLE) private double pay;
     @DatabaseField(dataType = DataType.DOUBLE) private double overpayment;
 
-    public static final Pay EMPTY;
+    private static final Pay EMPTY;
 
     static {
         EMPTY = new Pay();
         EMPTY.credit = Credit.empty();
         EMPTY.rate = Rate.empty();
+    }
+
+    public static Pay empty() {
+
+        EMPTY.balance = 0;
+        EMPTY.pay = 0;
+        EMPTY.overpayment = 0;
+        EMPTY.id = 0;
+        EMPTY.date = 0;
+
+        return EMPTY;
     }
 
     public void newRecord(double balance,double pay,double overpayment) {
@@ -49,7 +61,7 @@ public class Pay {
         return pay;
     }
 
-    public void setPay(int pay) {
+    public void setPay(double pay) {
         this.pay = pay;
     }
 

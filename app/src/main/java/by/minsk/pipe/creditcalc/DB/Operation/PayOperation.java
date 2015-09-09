@@ -32,7 +32,10 @@ public class PayOperation {
             builder = dao.queryBuilder();
             builder.where().eq("credit_id",idCredit);
 
-            return dao.query(builder.prepare());
+            List<Pay> list = dao.query(builder.prepare());
+            refresh(list);
+
+            return list;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,12 +57,26 @@ public class PayOperation {
         List <Pay> list = get(1);
         if (list != null && !list.isEmpty()) return list.get(0);
 
-        return Pay.EMPTY;
+        return Pay.empty();
     }
 
     public  Pay getLast(int idCredit) {
 
-        return getLast(); //todo построить запрос с поиском
+        builder = dao.queryBuilder();
+        try {
+            builder
+                    .orderBy("id",false)
+                    .where()
+                    .eq("credit_id",idCredit);
+
+            List<Pay> list = dao.query(builder.prepare());
+            refresh(list);
+
+            if (!list.isEmpty()) return list.get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Pay.empty();
     }
 
     public   List<Pay> get(long quantity){
@@ -75,21 +92,6 @@ public class PayOperation {
         return Collections.emptyList();
     }
 
-    public  void create(double sum, double overpayment) {
-
-        Pay lastPay = getLast();
-        if (lastPay != null) {
-
-            double lastBalance = lastPay.getBalance();
-            double lastOverpayment = lastPay.getOverpayment();
-
-            Pay pay = new Pay();
-            pay.newRecord(lastBalance - sum,sum,lastOverpayment + overpayment);
-
-            put(pay);
-        }
-    }
-
     public int del(int idCredit) {
 
         List<Pay> pays = getAll(idCredit);
@@ -100,5 +102,16 @@ public class PayOperation {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    private void refresh(List<Pay> pays) {
+        for (Pay pay:pays) {
+            try {
+                DBManager.getInstance().getHelper().getCreditDao().refresh(pay.getCredit());
+                DBManager.getInstance().getHelper().getRateDao().refresh(pay.getRate());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

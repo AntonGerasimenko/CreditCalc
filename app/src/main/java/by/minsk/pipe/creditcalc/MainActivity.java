@@ -9,13 +9,12 @@ import android.widget.Button;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import by.minsk.pipe.creditcalc.Fragments.CalcPay;
+import by.minsk.pipe.creditcalc.Fragments.MakePay;
 import by.minsk.pipe.creditcalc.Fragments.CreditList;
 import by.minsk.pipe.creditcalc.Fragments.MakeCredit;
 import by.minsk.pipe.creditcalc.Fragments.PayList;
 import by.minsk.pipe.creditcalc.Fragments.PieChartFr;
 import by.minsk.pipe.creditcalc.Logic.Actual;
-import by.minsk.pipe.creditcalc.models.Credit;
 
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
@@ -51,7 +50,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 PayList  fragment = (PayList) getFragmentManager().findFragmentByTag(PayList.TAG);
                 if (fragment!= null) {
                     int id = fragment.getIdCredit();
-                    Fragment calcPay = CalcPay.newInstance(actual,id);
+                    Fragment calcPay = MakePay.newInstance(actual, id);
                     getFragmentManager()
                             .beginTransaction()
                             .replace(R.id.temp_container,calcPay , PayList.TAG)
@@ -69,11 +68,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void showPayFragment(int idCredit) {
 
-        Fragment  fragment = CalcPay.newInstance(actual, idCredit);
+        Fragment  fragment = MakePay.newInstance(actual, idCredit);
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.temp_container,fragment , CalcPay.TAG)
+                .replace(R.id.temp_container,fragment , MakePay.TAG)
                 .commit();
     }
 

@@ -31,6 +31,7 @@
 
 
     <string name="pay_is_small">Платеж слишком мал</string>
+    <string name="pay_is_large">Платеж слишком велик</string>
 
     <string-array name="currency" >
         <item>$</item>

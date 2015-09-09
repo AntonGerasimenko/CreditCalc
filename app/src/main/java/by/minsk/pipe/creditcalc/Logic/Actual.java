@@ -18,6 +18,7 @@ import by.minsk.pipe.creditcalc.models.Rate;
 public class Actual implements OnActual {
 
 
+    private final Calendar now = Calendar.getInstance();
 
     @Override
     public List<Pay> getAllPays() {
@@ -35,7 +36,7 @@ public class Actual implements OnActual {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Pay.EMPTY;
+        return Pay.empty();
     }
 
     @Override
@@ -50,29 +51,8 @@ public class Actual implements OnActual {
         return DBservice.rate().getLast();
     }
 
-    public String getBalance(Currency currency) {
+    public long getNowDate() {
 
-        Rate rate = DBservice.rate().getLast();
-        double curen = 1;
-        if (rate != null) {
-            switch (currency) {
-                case  USD:
-                    curen =  rate.getUsaRate();
-                    break;
-                case EU:
-                    curen =  rate.getEuRate();
-                    break;
-                case RUR:
-                case BYR:
-                case UA:
-                    break;
-            }
-            Pay pay = DBservice.pay().getLast();
-            if (pay != null) {
-                double balance = pay.getBalance();
-                return String.valueOf(balance / curen);
-            }
-        }
-        return "0";
+        return  now.getTimeInMillis();
     }
 }

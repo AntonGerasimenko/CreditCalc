@@ -15,18 +15,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import by.minsk.pipe.creditcalc.DB.DBservice;
+import by.minsk.pipe.creditcalc.Exception.IsTooLarge;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
-import by.minsk.pipe.creditcalc.Exception.MakeNewCreditFault;
 import by.minsk.pipe.creditcalc.Logic.Actual;
 
 import by.minsk.pipe.creditcalc.Logic.Convert;
-import by.minsk.pipe.creditcalc.Logic.CreditOperation;
 import by.minsk.pipe.creditcalc.Logic.Payment;
+import by.minsk.pipe.creditcalc.MainActivity;
 import by.minsk.pipe.creditcalc.R;
 import by.minsk.pipe.creditcalc.models.Credit;
 import by.minsk.pipe.creditcalc.models.Pay;
@@ -34,7 +34,7 @@ import by.minsk.pipe.creditcalc.models.Pay;
 /**
  * Created by gerasimenko on 31.08.2015.
  */
-public class CalcPay extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class MakePay extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "CalcPay";
 
@@ -52,9 +52,9 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
     private Payment payment;
     private Pay lastPay;
 
-    public static CalcPay newInstance(@NonNull Actual actual, int id) {
+    public static MakePay newInstance(@NonNull Actual actual, int id) {
 
-        CalcPay instance = new CalcPay();
+        MakePay instance = new MakePay();
         instance.actual = actual;
         instance.payment = new Payment(actual);
         Pay pay = DBservice.pay().getLast(id);
@@ -84,21 +84,18 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
 
     @Override
     public void onClick(View v) {
-        CreditOperation newCredit = new CreditOperation();
-
-        try {
-            Date date = new Date(2020,07,22);
-            newCredit.make(35,200000000,true,date);
-        } catch (MakeNewCreditFault makeNewCreditFault) {
-            makeNewCreditFault.printStackTrace();
-        }
 
         double sum = Double.parseDouble(String.valueOf(nextPay.getText()));
         try {
-            payment.makePayment(sum);
-        } catch (IsTooSmall isTooSmall) {
+            payment.make(sum, lastPay);
+        } catch (IsTooSmall ex) {
             Toast.makeText(getActivity(),R.string.pay_is_small,Toast.LENGTH_LONG).show();
+            return;
+        } catch (IsTooLarge ex) {
+            Toast.makeText(getActivity(),R.string.pay_is_large,Toast.LENGTH_LONG).show();
+            return;
         }
+        ((MainActivity)getActivity()).showPayList(lastPay.getCredit().getId());
     }
 
     @Override
@@ -133,12 +130,31 @@ public class CalcPay extends Fragment implements View.OnClickListener, AdapterVi
                 )
         );
 
-        overpay.setText(Convert.money(lastPay.getOverpayment()));
+        overpay.setText(Convert.money(calculateOverpayment()));
 
         String endData = Convert.date(lastPay.getCredit().getEndData());
         termin.setText(endData);
         intetestRate.setText(Convert.percent(lastPay.getCredit().getInterestRate()));
 
-        nextPay.setText(Convert.money(payment.getMinPayment(lastPay)));
+        nextPay.setText(Convert.money(
+                        payment.getMinPayment(lastPay)
+                )
+        );
+    }
+
+    private double calculateOverpayment() {
+
+        List<Pay> pays = DBservice.pay().getAll(lastPay.getCredit().getId());
+
+        double accum = 0;
+        int i=0;
+        int position = pays.size();
+        do {
+            Pay pay = pays.get(i);
+            accum += pay.getOverpayment();
+            i++;
+        } while(i<position);
+
+        return accum;
     }
 }

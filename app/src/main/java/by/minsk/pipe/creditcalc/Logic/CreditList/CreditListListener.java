@@ -6,5 +6,5 @@ package by.minsk.pipe.creditcalc.Logic.CreditList;
 public interface CreditListListener {
 
     void delete(int position);
-    void click(int position);
+    void statistic(int position);
 }

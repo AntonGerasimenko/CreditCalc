@@ -51,6 +51,14 @@
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center_vertical" />
+
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,6 +120,7 @@
         android:layout_gravity="center_horizontal">
         <EditText
             android:layout_width="wrap_content"
+            android:textScaleX="1.8"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"

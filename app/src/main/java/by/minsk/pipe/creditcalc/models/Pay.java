@@ -5,13 +5,14 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.types.NativeUuidType;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by gerasimenko on 24.08.2015.
  */
 @DatabaseTable(tableName="pays")
-public class Pay {
+public class Pay implements Cloneable{
     @DatabaseField(generatedId = true) private int id;
     @DatabaseField(dataType = DataType.LONG) private long date;
 
@@ -22,12 +23,27 @@ public class Pay {
     @DatabaseField(dataType = DataType.DOUBLE) private double pay;
     @DatabaseField(dataType = DataType.DOUBLE) private double overpayment;
 
+    @DatabaseField(dataType = DataType.DOUBLE) private double interestPay;
+
+    public double getDeptPay() {
+        return deptPay;
+    }
+
+    public void setDeptPay(double deptPay) {
+        this.deptPay = deptPay;
+    }
+
+    @DatabaseField(dataType = DataType.DOUBLE) private double deptPay;
+
     private static final Pay EMPTY;
 
     static {
         EMPTY = new Pay();
         EMPTY.credit = Credit.empty();
         EMPTY.rate = Rate.empty();
+    }
+
+    public Pay() {
     }
 
     public static Pay empty() {
@@ -107,5 +123,30 @@ public class Pay {
 
     public void setRate(Rate rate) {
         this.rate = rate;
+    }
+
+    public double getInterestPay() {
+        return interestPay;
+    }
+
+    public void setInterestPay(double interestPay) {
+        this.interestPay = interestPay;
+    }
+
+    @Override
+    public Pay clone() throws CloneNotSupportedException {
+
+        Pay out = new Pay();
+        out.setCredit(credit);
+        out.setRate(rate);
+
+        out.setBalance(balance);
+        out.setDate(date);
+        out.setId(id);
+        out.setDeptPay(deptPay);
+        out.setPay(pay);
+        out.setInterestPay(interestPay);
+
+        return out;
     }
 }

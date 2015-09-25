@@ -1,35 +1,24 @@
 package by.minsk.pipe.creditcalc.Networks;
 
-import android.os.AsyncTask;
 import android.util.Log;
-
-import com.j256.ormlite.dao.Dao;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
 import java.net.URL;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import by.minsk.pipe.creditcalc.DB.DBManager;
 import by.minsk.pipe.creditcalc.DB.DBservice;
-import by.minsk.pipe.creditcalc.DB.DatabaseHelper;
-import by.minsk.pipe.creditcalc.Logic.OnRateListener;
 import by.minsk.pipe.creditcalc.models.Rate;
 
 /**
  * Created by gerasimenko on 26.08.2015.
  */
-public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
+public class BLRconnect {
 
     private String belRateUrl = "http://www.nbrb.by/Services/XmlExRates.aspx?ondate=";
     private String belVatUrl = "http://www.nbrb.by/Services/XmlRefRate.aspx?ondate=";
@@ -43,11 +32,10 @@ public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
     private final static String USD_ID = "145";
     private final static String EU_ID = "19";
 
-    private OnRateListener listener;
     private Rate rate;
 
-    public XMLconnect(OnRateListener listener) {
-        this.listener = listener;
+    public BLRconnect() {
+
     }
 
     private void loadRate(String date) {
@@ -137,9 +125,9 @@ public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
         return 0;
     }
 
-    @Override
-    protected Rate doInBackground(Date... params) {
-        Date date = params[0];
+    public Rate run(Date date) {
+        Log.d("RATE","inBackground");
+
         if (date != null) {
             String sDate = convert(date);
             rate = new Rate();
@@ -148,25 +136,27 @@ public class XMLconnect extends AsyncTask <Date,Rate,Rate> {
             loadRate(sDate);
             loadVat(sDate);
         }
-        return rate;
+        Log.d("RATE", "rate");
+
+        return  onPostExecute(rate);
     }
 
-    @Override
-    protected void onPostExecute(Rate rate) {
+    protected Rate onPostExecute(Rate rate) {
+
         Rate lastRate = DBservice.rate().getLast();
         if (lastRate == null && rate == null) {
-            listener.getRate(Rate.empty());
+            return Rate.empty();
         } else if (lastRate != null && rate == null) {
-            listener.getRate(lastRate);
+            return lastRate;
         } else if (lastRate == null && rate != null) {
-            listener.getRate(rate);
+            return rate;
         } else {
             if (!rate.equals(lastRate)) {
                 DBservice.rate().put(rate);
                 Log.d("Connection","Put to DB: " + rate.toString());
             }else Log.d("Connection", "Not new data: " + rate.toString());
-            listener.getRate(rate);
+            return rate;
         }
-        super.onPostExecute(rate);
     }
 }
+

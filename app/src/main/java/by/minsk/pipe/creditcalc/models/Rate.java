@@ -28,6 +28,19 @@ public class Rate {
         this.vat = vat;
     }
 
+    public double getExchangeRate(Currency currency) {
+        switch (currency) {
+            case USD: return usaRate;
+            case EU: return euRate;
+            case BYR:
+            case UA:
+            case RUR: return 1;
+        }
+        return 1;
+    }
+
+
+
     public double getUsaRate() {
         return usaRate;
     }

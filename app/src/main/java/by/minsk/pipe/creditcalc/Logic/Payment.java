@@ -1,9 +1,11 @@
 package by.minsk.pipe.creditcalc.Logic;
 
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
+import java.util.List;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooLarge;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
@@ -17,30 +19,49 @@ import by.minsk.pipe.creditcalc.models.Rate;
 public class Payment {
 
     public final static int DAYS_IN_YEAR = 365;
+    public final static int DAYS_IN_MONTH = 30;
     private double minPay;
     private Actual actual;
+
+
+
+
 
     public Payment(Actual actual) {
         this.actual = actual;
     }
 
-    public void make(double sum, Pay lastPay) throws IsTooSmall, IsTooLarge {
+    public void make(double sum, Pay lastPay,final ResultAddPay result) throws IsTooSmall, IsTooLarge {
+
+        if (sum == 0) throw new IsTooSmall("Payment is 0");
+
 
         double overpayment = sum - minPay;
         if (sum > lastPay.getBalance()) throw new IsTooLarge();
         if (overpayment > -1) {
 
-            Pay newPay = new Pay();
-            newPay.setBalance(lastPay.getBalance() - sum);
+            final Pay newPay = new Pay();
+
+            if (sum>lastPay.getBalance()) {
+                newPay.setBalance(0);
+            } else {
+                newPay.setBalance(lastPay.getBalance() - sum);
+            }
             newPay.setPay(sum);
             newPay.setOverpayment(overpayment);
             newPay.setDate(actual.getNowDate());
             newPay.setCredit(lastPay.getCredit());
 
+            actual.getRate(new OnRateListener() {
+                @Override
+                public void getRate(Rate rate) {
+                    newPay.setRate(rate);
+                    DBservice.pay().put(newPay);
+                    result.result();
+                }
+            });
 
-            //todo add Rate
 
-            DBservice.pay().put(newPay);
         } else throw new IsTooSmall("Payment is too small");
     }
 
@@ -55,6 +76,67 @@ public class Payment {
 
         minPay = interestPayment(pay,lastPayDays) + debtPayment(pay,lastPayDays);
         return minPay;
+    }
+
+
+    public  List<Pay> calculateAllCredit(Credit credit) {
+
+        final Calendar calendar = Calendar.getInstance();
+        long size = (-1)*periodDays(credit.getEndData());
+
+        final double summa = credit.getSumma();
+        final int creditMonth = (int) (size/DAYS_IN_MONTH);
+        final double deptPay = summa/creditMonth;
+        final double percent = credit.getInterestRate();
+
+        final List<Pay> pays = new ArrayList<>();
+        final Pay pay1 = new Pay();
+        pay1.setDate(calendar.getTimeInMillis());
+        pay1.setDeptPay(0);
+        pay1.setInterestPay(0);
+        pay1.setBalance(summa);
+        pay1.setCredit(credit);
+
+        actual.getRate(new OnRateListener() {
+            @Override
+            public void getRate(Rate rate) {
+                pay1.setRate(rate);
+                pays.add(pay1);
+            }
+        });
+
+        for (int i=0;i<creditMonth;i++){
+            Pay pay = new Pay();
+
+            calendar.add(Calendar.DATE, DAYS_IN_MONTH);
+            pay.setDate(calendar.getTimeInMillis());
+
+            pay.setDeptPay(deptPay);
+            double balance;
+            if (pays.isEmpty()) {
+                balance = summa;
+            } else {
+                int j = pays.size()-1;
+                balance = pays.get(j).getBalance();
+            }
+            double interestPay = calculateInterest(balance,percent,DAYS_IN_MONTH);
+
+            pay.setInterestPay(interestPay);
+            pay.setPay(deptPay+interestPay);
+
+            balance = balance - deptPay;
+            pay.setBalance(balance);
+            pay.setCredit(credit);
+            pay.setRate(pay1.getRate());
+            pays.add(pay);
+        }
+
+        return pays;
+    }
+
+    private double calculateInterest(double summa, double percent, int period){
+
+        return  summa/100*percent/period;
     }
 
     private double interestPayment(Pay pay,int days) {
@@ -91,6 +173,11 @@ public class Payment {
         long diffTime = now - end;
 
         return diffTime / (1000 * 60 * 60 * 24);
+    }
+
+    public interface ResultAddPay {
+
+        void result();
     }
 }
 

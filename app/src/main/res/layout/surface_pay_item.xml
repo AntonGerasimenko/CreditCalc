@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_weight="100">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:paddingRight="20dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/ic_home_black_24dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:paddingLeft="30dp"
+        android:text= " Auto"
+        android:layout_gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/target" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="20"
+        android:layout_gravity="center_vertical"
+        android:text= " 230 000"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/balance" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="$"
+        android:id="@+id/currency" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:layout_gravity="center_vertical"
+        android:gravity="right"
+        android:text= " 22.09.2015"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/date" />
+</LinearLayout>

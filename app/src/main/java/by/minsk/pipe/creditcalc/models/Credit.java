@@ -21,9 +21,15 @@ public class Credit {
     @DatabaseField(dataType = DataType.BOOLEAN) private boolean useVat;
     @DatabaseField(foreign = true) private Credit parent;
 
-    public static Credit empty(){
+    private static final Credit empty = new Credit();
 
-        return new Credit();
+    public static Credit empty(){
+        return empty;
+    }
+
+    public  boolean isEmpty() {
+
+        return this.equals(empty);
     }
 
     public double getInterestRate() {

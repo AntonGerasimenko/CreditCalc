@@ -1,87 +1,116 @@
 package by.minsk.pipe.creditcalc;
 
 
-import android.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import by.minsk.pipe.creditcalc.Fragments.MakePay;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+
+import by.minsk.pipe.creditcalc.Fragments.ActualPays;
+import by.minsk.pipe.creditcalc.Fragments.CalcAllPays;
 import by.minsk.pipe.creditcalc.Fragments.CreditList;
+import by.minsk.pipe.creditcalc.Fragments.FragmentListener;
 import by.minsk.pipe.creditcalc.Fragments.MakeCredit;
-import by.minsk.pipe.creditcalc.Fragments.PayList;
+import by.minsk.pipe.creditcalc.Fragments.MakePay;
 import by.minsk.pipe.creditcalc.Fragments.PieChartFr;
 import by.minsk.pipe.creditcalc.Logic.Actual;
+import by.minsk.pipe.creditcalc.models.Credit;
 
+public class MainActivity extends AppCompatActivity implements FragmentListener {
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
-
-
-    private Actual actual = new Actual();
-
-    @InjectView(R.id.button1) Button btnMake;
-    @InjectView(R.id.button2) Button btnAdd;
-    @InjectView(R.id.button3) Button btnList;
-    @InjectView(R.id.button4) Button btnPie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
 
-        btnMake.setOnClickListener(this);
-        btnAdd.setOnClickListener(this);
-        btnList.setOnClickListener(this);
-        btnPie.setOnClickListener(this);
+       if (savedInstanceState==null) creditList();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ActualPays.TAG);
+        if (fragment != null && fragment.isVisible()) {
+            creditList();
+            return;
+        }
+        fragment = getSupportFragmentManager().findFragmentByTag(MakeCredit.TAG);
+        if (fragment!=null && fragment.isVisible()) {
+            creditList();
+            return;
+        }
+        fragment = getSupportFragmentManager().findFragmentByTag(PieChartFr.TAG);
+        if (fragment!=null && fragment.isVisible()) {
+            creditList();
+            return;
+        }
+        fragment = getSupportFragmentManager().findFragmentByTag(CalcAllPays.TAG);
+        if (fragment!=null && fragment.isVisible()) {
+
+            super.onBackPressed();
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     @Override
-    public void onClick(View v) {
+    public void creditList() {
+        Fragment fragment = CreditList.newInstance(this);
 
-        switch (v.getId()) {
-            case R.id.button1:
-                getFragmentManager().beginTransaction().replace(R.id.temp_container, new MakeCredit(),MakeCredit.TAG).commit();
-                break;
-            case R.id.button2:
-                PayList  fragment = (PayList) getFragmentManager().findFragmentByTag(PayList.TAG);
-                if (fragment!= null) {
-                    int id = fragment.getIdCredit();
-                    Fragment calcPay = MakePay.newInstance(actual, id);
-                    getFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.temp_container,calcPay , PayList.TAG)
-                            .commit();
-                }
-                break;
-            case R.id.button3:
-                getFragmentManager().beginTransaction().replace(R.id.temp_container, new CreditList(),CreditList.TAG).commit();
-                break;
-            case R.id.button4:
-                getFragmentManager().beginTransaction().replace(R.id.temp_container, new PieChartFr(),PieChartFr.TAG).commit();
-                break;
-        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.temp_container, fragment, CreditList.TAG).commit();
     }
 
-    public void showPayFragment(int idCredit) {
+    @Override
+    public void makeCredit() {
 
-        Fragment  fragment = MakePay.newInstance(actual, idCredit);
+        Fragment fragment = MakeCredit.newInstance(this);
 
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.temp_container,fragment , MakePay.TAG)
-                .commit();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.temp_container, fragment, MakeCredit.TAG).commit();
     }
 
-    public void showPayList(int idCredit) {
-        Fragment  fragment = PayList.newInstance(idCredit);
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.temp_container,fragment , PayList.TAG)
-                .commit();
+    @Override
+    public void payList(Credit credit) {
+
+        Fragment fragment = ActualPays.newInstance(credit.getId(), this);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.temp_container, fragment, ActualPays.TAG).commit();
+    }
+
+    @Override
+    public void makePay(int  idCredit) {
+        Fragment fragment = MakePay.newInstance(new Actual(), idCredit,this);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.temp_container, fragment, MakePay.TAG).commit();
+    }
+
+    @Override
+    public void calcAllPays(Credit credit) {
+
+        Fragment fragment = CalcAllPays.newInstance(credit, this);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.temp_container, fragment, CalcAllPays.TAG);
+        ft.addToBackStack(CalcAllPays.TAG);
+        ft.commit();
+    }
+
+    @Override
+    public void showStatistic(Credit credit) {
+        Fragment fragment = PieChartFr.newInstance(this);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.temp_container, fragment, PieChartFr.TAG).commit();
     }
 }
 

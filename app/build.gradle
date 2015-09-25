@@ -21,6 +21,7 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+       /* testPackageName"by.minsk.pipe.creditcalc"*/
     }
     buildTypes {
         release {
@@ -41,4 +42,8 @@ dependencies {
     compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
     compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
     compile files('libs/ksoap2-android-assembly-2.6.5-jar-with-dependencies.jar')
+    testCompile 'junit:junit:4.12'
+
+    compile "com.daimajia.swipelayout:library:1.1.8@aar"
+
 }

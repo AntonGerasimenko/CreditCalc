@@ -7,10 +7,12 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:weightSum="100"
         android:layout_gravity="center_horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="30"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/credit_target"
             android:id="@+id/textView"
@@ -19,7 +21,14 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="30"
             android:id="@+id/credit_target"
+            android:layout_gravity="center" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:id="@+id/image_credit"
             android:layout_gravity="center" />
     </LinearLayout>
 
@@ -38,21 +47,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
-
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
             android:id="@+id/summa"
-            android:text="10000"
             android:layout_gravity="center" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/make_credit_spinner"
-            android:layout_gravity="center" />
+            android:id="@+id/currency"
+            android:layout_weight="1" />
+
 
     </LinearLayout>
 
@@ -62,18 +70,43 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/term"
         android:layout_gravity="center_horizontal" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
-
-        <EditText
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
-            android:id="@+id/termin" />
+            android:gravity="center"
+            android:paddingRight="30dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/begin"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/begin_termin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="30dp"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/end"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/end_termin" />
+
     </LinearLayout>
 
     <TextView
@@ -103,12 +136,25 @@
             android:layout_gravity="right" />
     </LinearLayout>
 
-
-
-    <Button
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/make_credit"
-        android:id="@+id/add_credit"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/make_credit"
+            android:id="@+id/add_credit"
+            android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calc_pays"
+            android:id="@+id/calculate_pays"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+
+
 </LinearLayout>

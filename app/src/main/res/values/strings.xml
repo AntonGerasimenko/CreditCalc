@@ -4,26 +4,42 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="total">Итого:</string>
+    <string name="summa">Взято:</string>
+    <string name="total_pays">Выплачено:</string>
 
     <string name="balance">Баланс</string>
     <string name="next_pay">Следующий платеж</string>
     <string name="make_pay">Добавить платеж</string>
-    <string name="overpay">Переплата</string>
+    <string name="pay">Платеж</string>
+    <string name="date">Дата</string>
+
+    <string name="overpay">Переплата:</string>
+    <string name="percent_pay">Выплаты по процентам:</string>
 
 
 
-    <string name="make_credit">Добавить</string>
+    <string name="make_credit">Добавить кредит</string>
     <string name="delete_credit">Удалить</string>
     <string name="summ">Суммма</string>
     <string name="term">Срок</string>
+    <string name="begin">Начало</string>
+    <string name="end">Конец</string>
+
+
+    <string name="enter_term">(Введите срок)</string>
+
     <string name="percent">Годовой процент</string>
     <string name="credit_target">Цель кредита</string>
+    <string name="calc_pays">Просчитаить кредит</string>
+    <string name="body_credit">Основной долг</string>
 
     <string name="use_refin_rate">Учитывать ставку рефинансирования</string>
 
 
     <string name="err_credit_null">Введите сумму кредита.</string>
-    <string name="err_term_null">Введите срок кредита.</string>
+    <string name="err_term_begin_null">Введите срок начала кредита.</string>
+    <string name="err_term_end_null">Введите срок окончания кредита.</string>
     <string name="err_interest_rate_null">Введите процент кредита.</string>
 
 
@@ -32,6 +48,15 @@
 
     <string name="pay_is_small">Платеж слишком мал</string>
     <string name="pay_is_large">Платеж слишком велик</string>
+
+
+    <string name="by_rub">Беларуский рубль</string>
+    <string name="rur">Российский рубль</string>
+    <string name="usd">Американский доллар</string>
+    <string name="euro">Евро</string>
+    <string name="ua">Украинская гривна</string>
+    <string name="kz">Казахский тенге</string>
+
 
     <string-array name="currency" >
         <item>$</item>

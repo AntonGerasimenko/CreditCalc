@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_weight="100">
+    <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="80dp">
+
+        <LinearLayout
+            android:background="#66ddff00"
+            android:id="@+id/bottom_wrapper"
+            android:layout_width="160dp"
+            android:weightSum="1"
+            android:layout_height="match_parent">
+            <include layout="@layout/low_lev_credit_item"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="10dp"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent">
+            <include layout="@layout/surface_pay_item"/>
+        </LinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+</LinearLayout>

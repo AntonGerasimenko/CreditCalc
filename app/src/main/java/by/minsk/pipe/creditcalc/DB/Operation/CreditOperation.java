@@ -70,16 +70,13 @@ public class CreditOperation {
     }
 
     public int del(Credit credit) {
-
         DBservice.pay().del(credit.getId());
-
         try {
 
             return dao.delete(credit);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return -1;
     }
 }

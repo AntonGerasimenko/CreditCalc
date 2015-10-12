@@ -12,6 +12,7 @@ import by.minsk.pipe.creditcalc.Logic.Payment;
 import by.minsk.pipe.creditcalc.R;
 import by.minsk.pipe.creditcalc.models.Credit;
 import by.minsk.pipe.creditcalc.models.Currency;
+import by.minsk.pipe.creditcalc.models.Pay;
 
 
 /**
@@ -35,8 +36,10 @@ public final class CalcAllPays extends PayList {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays,list, Currency.BYR);
+        ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays, list, Currency.BYR);
         setListAdapter(adapter);
+
+       Pay pay = (Pay) savedInstanceState.getSerializable("");
         super.onActivityCreated(savedInstanceState);
         currency.setSelection(credit.getCurrency());
     }

@@ -10,6 +10,7 @@ import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooLarge;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
 import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.models.Currency;
 import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
@@ -52,6 +53,8 @@ public class Payment {
             newPay.setDate(actual.getNowDate());
             newPay.setCredit(lastPay.getCredit());
 
+            Credit credit = lastPay.getCredit();
+
             actual.getRate(new OnRateListener() {
                 @Override
                 public void getRate(Rate rate) {
@@ -59,7 +62,7 @@ public class Payment {
                     DBservice.pay().put(newPay);
                     result.result();
                 }
-            });
+            }, Currency.getInstance(credit.getCurrency()));
 
 
         } else throw new IsTooSmall("Payment is too small");
@@ -103,7 +106,7 @@ public class Payment {
                 pay1.setRate(rate);
                 pays.add(pay1);
             }
-        });
+        },Currency.getInstance(credit.getCurrency()));
 
         for (int i=0;i<creditMonth;i++){
             Pay pay = new Pay();

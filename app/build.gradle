@@ -41,7 +41,7 @@ dependencies {
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile files('libs/ormlite-android-4.49-SNAPSHOT.jar')
     compile files('libs/ormlite-core-4.49-SNAPSHOT.jar')
-    compile files('libs/ksoap2-android-assembly-2.6.5-jar-with-dependencies.jar')
+    /*compile files('libs/ksoap2-android-assembly-2.6.5-jar-with-dependencies.jar')*/
     testCompile 'junit:junit:4.12'
 
     compile "com.daimajia.swipelayout:library:1.1.8@aar"

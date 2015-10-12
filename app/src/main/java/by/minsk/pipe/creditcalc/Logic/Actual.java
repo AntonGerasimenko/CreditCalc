@@ -8,6 +8,9 @@ import java.util.List;
 import by.minsk.pipe.creditcalc.DB.DBManager;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Networks.BLRconnect;
+import by.minsk.pipe.creditcalc.Networks.Connect;
+import by.minsk.pipe.creditcalc.Networks.XMLconnect;
+import by.minsk.pipe.creditcalc.models.Currency;
 import by.minsk.pipe.creditcalc.models.Pay;
 import by.minsk.pipe.creditcalc.models.Rate;
 
@@ -39,14 +42,14 @@ public class Actual implements OnActual {
     }
 
     @Override
-    public void getRate(final OnRateListener listener) {
+    public void getRate(final OnRateListener listener, final Currency currency) {
 
         final Rate[] rate = {new Rate()};
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                BLRconnect xmLconnect = new BLRconnect();
-                rate[0] = xmLconnect.run(new Date());
+                Connect xmLconnect = XMLconnect.factory(currency);
+                rate[0] = xmLconnect.getRate(new Date());
             }
         });
         thread.start();
@@ -67,7 +70,6 @@ public class Actual implements OnActual {
 
         return  now.getTimeInMillis();
     }
-
 
     public boolean hasNoCredits() {
 

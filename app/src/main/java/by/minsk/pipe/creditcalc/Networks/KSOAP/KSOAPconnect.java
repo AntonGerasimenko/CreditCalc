@@ -1,4 +1,4 @@
-package by.minsk.pipe.creditcalc.Networks;
+package by.minsk.pipe.creditcalc.Networks.KSOAP;
 
 import android.os.AsyncTask;
 import android.util.Log;

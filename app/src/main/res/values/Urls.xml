@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="bel_rate">http://www.nbrb.by/Services/XmlExRates.aspx?ondate=</string>
+    <string name="bel_regin_rate">http://www.nbrb.by/Services/XmlRefRate.aspx?ondate=</string>
+    <string name="rur_rate">http://www.cbr.ru/scripts/XML_daily.asp?date_req=</string>
+
+</resources>

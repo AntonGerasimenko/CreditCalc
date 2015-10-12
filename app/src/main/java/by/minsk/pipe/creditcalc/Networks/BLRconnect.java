@@ -1,27 +1,19 @@
 package by.minsk.pipe.creditcalc.Networks;
 
-import android.util.Log;
-import org.w3c.dom.Document;
+import android.app.Activity;
+
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import by.minsk.pipe.creditcalc.DB.DBservice;
+
+import by.minsk.pipe.creditcalc.R;
 import by.minsk.pipe.creditcalc.models.Rate;
 
 /**
  * Created by gerasimenko on 26.08.2015.
  */
-public class BLRconnect {
+public final class BLRconnect extends XMLconnect {
 
-    private String belRateUrl = "http://www.nbrb.by/Services/XmlExRates.aspx?ondate=";
-    private String belVatUrl = "http://www.nbrb.by/Services/XmlRefRate.aspx?ondate=";
 
     private final static String NODE_NAME_RATE = "Currency";
     private final static String NODE_NAME_VAT = "Item";
@@ -32,51 +24,15 @@ public class BLRconnect {
     private final static String USD_ID = "145";
     private final static String EU_ID = "19";
 
-    private Rate rate;
-
     public BLRconnect() {
-
+        super();
+        urlCurrRate = "http://www.nbrb.by/Services/XmlExRates.aspx?ondate=";
+        urlRefinRate = "http://www.nbrb.by/Services/XmlRefRate.aspx?ondate=";
     }
 
-    private void loadRate(String date) {
-        try {
-            String url = belRateUrl + date;
-            parsingRate(getXML(url, NODE_NAME_RATE));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadVat(String date){
-        try {
-            String url = belVatUrl + date;
-            parsingVat(getXML(url, NODE_NAME_VAT));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String convert(Date date) {
-
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-        return dateFormat.format(date);
-    }
-
-    private NodeList getXML(String urlName, String nodeName) throws Exception {
-
-        URL url = new URL(urlName);
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(new InputSource(url.openStream()));
-        doc.getDocumentElement().normalize();
-
-        return doc.getElementsByTagName(nodeName);
-    }
-
-    private void parsingRate(NodeList nodeList) {
+    @Override
+    protected void parsingCurrRate(NodeList nodeList) {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -98,7 +54,8 @@ public class BLRconnect {
         }
     }
 
-    private void parsingVat(NodeList nodeList){
+    @Override
+    protected void parsingRefinRate(NodeList nodeList){
 
         Node node = nodeList.item(0);
         if (node != null) {
@@ -106,6 +63,11 @@ public class BLRconnect {
             rate.setVat((int) parseNode(VAT_VALUE,node));
 
         }
+    }
+
+    @Override
+    protected String getNodeNameRate() {
+        return NODE_NAME_RATE;
     }
 
     private double parseNode(String nameNode, Node node) {
@@ -123,40 +85,6 @@ public class BLRconnect {
             }
         }
         return 0;
-    }
-
-    public Rate run(Date date) {
-        Log.d("RATE","inBackground");
-
-        if (date != null) {
-            String sDate = convert(date);
-            rate = new Rate();
-            rate.setDate(date.getTime());
-
-            loadRate(sDate);
-            loadVat(sDate);
-        }
-        Log.d("RATE", "rate");
-
-        return  onPostExecute(rate);
-    }
-
-    protected Rate onPostExecute(Rate rate) {
-
-        Rate lastRate = DBservice.rate().getLast();
-        if (lastRate == null && rate == null) {
-            return Rate.empty();
-        } else if (lastRate != null && rate == null) {
-            return lastRate;
-        } else if (lastRate == null && rate != null) {
-            return rate;
-        } else {
-            if (!rate.equals(lastRate)) {
-                DBservice.rate().put(rate);
-                Log.d("Connection","Put to DB: " + rate.toString());
-            }else Log.d("Connection", "Not new data: " + rate.toString());
-            return rate;
-        }
     }
 }
 

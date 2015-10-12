@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by gerasimenko on 24.08.2015.
  */
 @DatabaseTable(tableName="pays")
-public class Pay implements Cloneable{
+public class Pay implements Cloneable, Serializable{
     @DatabaseField(generatedId = true) private int id;
     @DatabaseField(dataType = DataType.LONG) private long date;
 

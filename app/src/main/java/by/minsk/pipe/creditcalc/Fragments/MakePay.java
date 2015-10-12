@@ -31,6 +31,8 @@ import by.minsk.pipe.creditcalc.Logic.Convert;
 import by.minsk.pipe.creditcalc.Logic.SeparNum;
 import by.minsk.pipe.creditcalc.Logic.Payment;
 import by.minsk.pipe.creditcalc.Networks.BLRconnect;
+import by.minsk.pipe.creditcalc.Networks.Connect;
+import by.minsk.pipe.creditcalc.Networks.XMLconnect;
 import by.minsk.pipe.creditcalc.R;
 import by.minsk.pipe.creditcalc.models.Credit;
 import by.minsk.pipe.creditcalc.models.Currency;
@@ -66,7 +68,7 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
 
     public static MakePay newInstance(@NonNull Actual actual, int id, FragmentListener showFragment) {
 
-        MakePay instance = new MakePay();
+        final MakePay instance = new MakePay();
 
         instance.payment = new Payment(actual);
         final Pay pay = DBservice.pay().getLast(id);
@@ -85,8 +87,9 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    BLRconnect xmLconnect = new BLRconnect();
-                    rate[0] = xmLconnect.run(new Date());
+                    Connect xmLconnect = XMLconnect.factory(Currency.BYR);
+                    assert xmLconnect != null;
+                    rate[0] = xmLconnect.getRate(new Date());
                 }
             });
             thread.start();

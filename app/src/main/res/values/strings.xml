@@ -42,10 +42,6 @@
     <string name="err_term_end_null">Введите срок окончания кредита.</string>
     <string name="err_interest_rate_null">Введите процент кредита.</string>
 
-
-
-
-
     <string name="pay_is_small">Платеж слишком мал</string>
     <string name="pay_is_large">Платеж слишком велик</string>
 

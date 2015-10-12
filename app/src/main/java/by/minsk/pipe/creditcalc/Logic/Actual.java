@@ -1,5 +1,7 @@
 package by.minsk.pipe.creditcalc.Logic;
 
+import android.util.Log;
+
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,11 +52,14 @@ public class Actual implements OnActual {
             public void run() {
                 Connect xmLconnect = XMLconnect.factory(currency);
                 rate[0] = xmLconnect.getRate(new Date());
+                Log.d("Rate","end thread");
             }
         });
         thread.start();
         try {
+            Log.d("Rate","UI join");
             thread.join();
+            Log.d("Rate","return to UI");
             listener.getRate(rate[0]);
         } catch (InterruptedException e) {
             e.printStackTrace();

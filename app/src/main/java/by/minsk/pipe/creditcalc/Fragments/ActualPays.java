@@ -29,14 +29,12 @@ public final class ActualPays extends PayList {
     private int idCredit;
     private Button addPay;
 
-    public static ActualPays newInstance(int idCredit, FragmentListener showFragment){
-
-        assert (showFragment != null);
+    public static ActualPays newInstance(int idCredit){
 
         ActualPays instance = new ActualPays();
         instance.pays = DBservice.pay().getAll(idCredit);
         instance.idCredit = idCredit;
-        instance.showFragment = showFragment;
+
 
         return instance;
     }

@@ -36,14 +36,6 @@ public class PieChartFr extends Fragment {
     @InjectView(R.id.pie_title)    TextView title;
 
 
-    public static PieChartFr newInstance(FragmentListener showFragment) {
-
-        PieChartFr instance = new PieChartFr();
-        instance.showFragment = showFragment;
-
-        return instance;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +49,7 @@ public class PieChartFr extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
+        showFragment = (FragmentListener) getActivity();
         title.setText("Title");
         pieChart();
         super.onActivityCreated(savedInstanceState);

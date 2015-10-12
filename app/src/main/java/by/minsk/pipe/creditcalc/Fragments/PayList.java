@@ -58,6 +58,8 @@ public abstract class PayList extends ListFragment implements View.OnClickListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
+        showFragment = (FragmentListener) getActivity();
+
         for (Pay pay:pays)
             try {
                 list.add(pay.clone());

@@ -23,9 +23,9 @@ public final class CalcAllPays extends PayList {
     public static final String TAG = "CreditAllPays";
     private Credit credit;
 
-    public static CalcAllPays newInstance(Credit credit, FragmentListener showFragment) {
+    public static CalcAllPays newInstance(Credit credit) {
         CalcAllPays instance = new CalcAllPays();
-        instance.showFragment = showFragment;
+
         Payment payment = new Payment(new Actual());
         instance.pays = payment.calculateAllCredit(credit);
         instance.credit = credit;
@@ -36,10 +36,10 @@ public final class CalcAllPays extends PayList {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays, list, Currency.BYR);
+        ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays, list, Currency.getInstance(credit.getCurrency()));
         setListAdapter(adapter);
 
-       Pay pay = (Pay) savedInstanceState.getSerializable("");
+
         super.onActivityCreated(savedInstanceState);
         currency.setSelection(credit.getCurrency());
     }

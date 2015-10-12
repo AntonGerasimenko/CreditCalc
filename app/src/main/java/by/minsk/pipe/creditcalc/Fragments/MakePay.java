@@ -66,7 +66,7 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
     private FragmentListener showFragment;
 
 
-    public static MakePay newInstance(@NonNull Actual actual, int id, FragmentListener showFragment) {
+    public static MakePay newInstance(@NonNull Actual actual, int id) {
 
         final MakePay instance = new MakePay();
 
@@ -100,7 +100,6 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
             }
             pay.setRate(rate[0]);
         }
-        instance.showFragment = showFragment;
 
         return instance;
     }
@@ -125,6 +124,13 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
         nextPay.addTextChangedListener(new SeparNum(nextPay));
 
         return  view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
+        showFragment = (FragmentListener) getActivity();
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

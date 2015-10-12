@@ -54,16 +54,6 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
 
     private String[] dates;
 
-
-    public static MakeCredit newInstance(FragmentListener showFragment) {
-        assert (showFragment!=null);
-
-        MakeCredit instance = new MakeCredit();
-        instance.showFragment = showFragment;
-
-        return instance;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +66,7 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
 
         ArrayAdapter<Currency> adapter = new CurrencySpinAdapter(getActivity(),R.layout.currency_spinner_item,Currency.getAllInstance());
         currency.setAdapter(adapter);
+        currency.setSelection(Currency.BYR.getInt());
 
         endLendingData.setOnClickListener(this);
         beginLendingData.setOnClickListener(this);
@@ -87,6 +78,8 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         String end;
         String begin;
+
+        showFragment = (FragmentListener) getActivity();
 
         if (savedInstanceState == null) {
             if (dates!= null) {

@@ -29,14 +29,6 @@ public class CreditList extends ListFragment implements View.OnClickListener, Cr
     private View footerView;
     private Button addButton;
 
-    public static CreditList newInstance(FragmentListener showFragment) {
-        assert (showFragment!=null);
-
-        CreditList instance = new CreditList();
-        instance.showFragment = showFragment;
-        return instance;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         credits = DBservice.credit().getAll();
@@ -54,6 +46,7 @@ public class CreditList extends ListFragment implements View.OnClickListener, Cr
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
+        showFragment = (FragmentListener) getActivity();
         getListView().addFooterView(footerView);
         super.onActivityCreated(savedInstanceState);
     }

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
 
     @Override
     public void creditList() {
-        Fragment fragment = CreditList.newInstance(this);
+        Fragment fragment = new CreditList();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public void makeCredit() {
 
-        Fragment fragment = MakeCredit.newInstance(this);
+        Fragment fragment = new MakeCredit();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public void payList(Credit credit) {
 
-        Fragment fragment = ActualPays.newInstance(credit.getId(), this);
+        Fragment fragment = ActualPays.newInstance(credit.getId());
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
         ft.replace(R.id.temp_container, fragment, ActualPays.TAG).commit();
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
 
     @Override
     public void makePay(int  idCredit) {
-        Fragment fragment = MakePay.newInstance(new Actual(), idCredit,this);
+        Fragment fragment = MakePay.newInstance(new Actual(), idCredit);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
         ft.replace(R.id.temp_container, fragment, MakePay.TAG).commit();
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public void calcAllPays(Credit credit) {
 
-        Fragment fragment = CalcAllPays.newInstance(credit, this);
+        Fragment fragment = CalcAllPays.newInstance(credit);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
 
     @Override
     public void showStatistic(Credit credit) {
-        Fragment fragment = PieChartFr.newInstance(this);
+        Fragment fragment = new CalcAllPays();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
         ft.replace(R.id.temp_container, fragment, PieChartFr.TAG).commit();

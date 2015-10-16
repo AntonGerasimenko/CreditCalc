@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import by.minsk.pipe.creditcalc.Fragments.ActualPays;
-import by.minsk.pipe.creditcalc.Fragments.CalcAllPays;
+import by.minsk.pipe.creditcalc.Fragments.ActualPaysList;
+import by.minsk.pipe.creditcalc.Fragments.AllPaysList;
 import by.minsk.pipe.creditcalc.Fragments.CreditList;
 import by.minsk.pipe.creditcalc.Fragments.FragmentListener;
 import by.minsk.pipe.creditcalc.Fragments.MakeCredit;
@@ -25,14 +28,29 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       if (savedInstanceState==null) creditList();
+       if (savedInstanceState==null) makeCredit();//creditList();
     }
 
 
     @Override
+    public boolean onCreatePanelMenu(int featureId, Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ActualPays.TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ActualPaysList.TAG);
         if (fragment != null && fragment.isVisible()) {
             creditList();
             return;
@@ -47,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
             creditList();
             return;
         }
-        fragment = getSupportFragmentManager().findFragmentByTag(CalcAllPays.TAG);
+        fragment = getSupportFragmentManager().findFragmentByTag(AllPaysList.TAG);
         if (fragment!=null && fragment.isVisible()) {
 
             super.onBackPressed();
@@ -79,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public void payList(Credit credit) {
 
-        Fragment fragment = ActualPays.newInstance(credit.getId());
+        Fragment fragment = ActualPaysList.newInstance(credit);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
-        ft.replace(R.id.temp_container, fragment, ActualPays.TAG).commit();
+        ft.replace(R.id.temp_container, fragment, ActualPaysList.TAG).commit();
     }
 
     @Override
@@ -96,18 +114,18 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public void calcAllPays(Credit credit) {
 
-        Fragment fragment = CalcAllPays.newInstance(credit);
+        Fragment fragment = AllPaysList.newInstance(credit);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
-        ft.replace(R.id.temp_container, fragment, CalcAllPays.TAG);
-        ft.addToBackStack(CalcAllPays.TAG);
+        ft.replace(R.id.temp_container, fragment, AllPaysList.TAG);
+        ft.addToBackStack(AllPaysList.TAG);
         ft.commit();
     }
 
     @Override
     public void showStatistic(Credit credit) {
-        Fragment fragment = new CalcAllPays();
+        Fragment fragment = new AllPaysList();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
         ft.replace(R.id.temp_container, fragment, PieChartFr.TAG).commit();

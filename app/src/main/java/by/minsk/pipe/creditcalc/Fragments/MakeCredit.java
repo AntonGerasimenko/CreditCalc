@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -125,8 +126,8 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
             case R.id.add_credit:
                 credit = collectCredit();
                 if (credit.isEmpty()) return;
-                showFragment.creditList();
                 DBservice.credit().create(credit);
+                showFragment.creditList();
                 break;
             case R.id.begin_termin:
                 calendar = Calendar.getInstance();
@@ -172,6 +173,9 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
     }
 
     private Credit collectCredit(){
+
+        if (true) return getDemo();
+
         Credit credit = new Credit();
         long now  = new Date().getTime();
         credit.setDate(now);
@@ -211,6 +215,9 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
 
         Currency curr = (Currency) currency.getSelectedItem();
         credit.setCurrency(curr.getInt());
+        credit.setLocation(Currency.BYR.getInt());
+
+
 
         return credit;
     }
@@ -220,5 +227,27 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
             return Double.parseDouble(string);
         }
         return 0;
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
+
+    Credit getDemo() {
+
+        Credit credit = new Credit();
+        credit.setTarget("archive");
+        credit.setLocation(Currency.BYR.getInt());
+
+        credit.setCurrency(Currency.USD.getInt());
+
+        credit.setDate(1445000855873l);
+        credit.setEndData(1476623248777l);
+        credit.setInterestRate(12.0);
+        credit.setSumma(1200);
+
+        return credit;
     }
 }

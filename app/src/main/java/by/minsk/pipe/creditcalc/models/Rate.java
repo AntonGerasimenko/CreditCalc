@@ -17,8 +17,11 @@ public class Rate {
 
     @DatabaseField(dataType = DataType.DOUBLE) private double usaRate;
     @DatabaseField(dataType = DataType.DOUBLE) private double euRate;
+    @DatabaseField(dataType = DataType.DOUBLE) private double ruRate;
+    @DatabaseField(dataType = DataType.DOUBLE) private double uaRate;
 
     @DatabaseField(dataType = DataType.DOUBLE) private double vat;
+
 
     public void newRecord(long date, double usaRate, double euRate, double vat){
 
@@ -32,14 +35,12 @@ public class Rate {
         switch (currency) {
             case USD: return usaRate;
             case EU: return euRate;
-            case BYR:
-            case UA:
-            case RUR: return 1;
+            case BYR: return 1;
+            case UA: return uaRate;
+            case RUR: return ruRate;
         }
         return 1;
     }
-
-
 
     public double getUsaRate() {
         return usaRate;
@@ -82,13 +83,26 @@ public class Rate {
         this.date = date;
     }
 
+
+    public double getRuRate() {
+        return ruRate;
+    }
+
+    public void setRuRate(double ruRate) {
+        this.ruRate = ruRate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
         if (o instanceof Rate) {
             if (((Rate) o).usaRate == usaRate) {
                 if (((Rate) o).euRate == euRate) {
-                    if (((Rate) o).vat == vat) return true;
+                    if (((Rate)o).ruRate==ruRate) {
+                        if (((Rate)o).uaRate==uaRate) {
+                            if (((Rate) o).vat == vat) return true;
+                        }
+                    }
                 }
             }
         }
@@ -104,5 +118,13 @@ public class Rate {
 
 
         return new Rate();
+    }
+
+    public double getUaRate() {
+        return uaRate;
+    }
+
+    public void setUaRate(double uaRate) {
+        this.uaRate = uaRate;
     }
 }

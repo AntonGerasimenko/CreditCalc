@@ -136,7 +136,17 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
     @Override
     public void onClick(View v) {
 
-        final double sum = Convert.money(nextPay.getText());
+
+        Currency currency = Currency.getInstance(balanceCurrency.getSelectedItemPosition());
+        Rate rate = lastPay.getRate();
+        double exRate = rate.getExchangeRate(currency);
+
+
+
+
+        final double sum = Convert.money(nextPay.getText()) * exRate;
+
+
 
 
         progressBar.setVisibility(View.VISIBLE);

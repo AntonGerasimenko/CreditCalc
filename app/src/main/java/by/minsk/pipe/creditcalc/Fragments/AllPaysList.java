@@ -12,19 +12,18 @@ import by.minsk.pipe.creditcalc.Logic.Payment;
 import by.minsk.pipe.creditcalc.R;
 import by.minsk.pipe.creditcalc.models.Credit;
 import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
 
 
 /**
  * Created by gerasimenko on 18.09.2015.
  */
-public final class CalcAllPays extends PayList {
+public final class AllPaysList extends PayList {
 
     public static final String TAG = "CreditAllPays";
     private Credit credit;
 
-    public static CalcAllPays newInstance(Credit credit) {
-        CalcAllPays instance = new CalcAllPays();
+    public static AllPaysList newInstance(Credit credit) {
+        AllPaysList instance = new AllPaysList();
 
         Payment payment = new Payment(new Actual());
         instance.pays = payment.calculateAllCredit(credit);
@@ -36,12 +35,16 @@ public final class CalcAllPays extends PayList {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
+        while (list.size()>1) {
+            list.remove(1);
+        }
+
         ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays, list, Currency.getInstance(credit.getCurrency()));
         setListAdapter(adapter);
 
 
         super.onActivityCreated(savedInstanceState);
-        currency.setSelection(credit.getCurrency());
+        if (currency!= null)        currency.setSelection(credit.getCurrency());
     }
 
     @Override

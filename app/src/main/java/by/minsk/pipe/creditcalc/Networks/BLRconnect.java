@@ -23,13 +23,14 @@ public final class BLRconnect extends XMLconnect {
 
     private final static String USD_ID = "145";
     private final static String EU_ID = "19";
+    private final static String RU_ID = "190";
+    private final static String UA_ID = "224";
 
     public BLRconnect() {
         super();
         urlCurrRate = "http://www.nbrb.by/Services/XmlExRates.aspx?ondate=";
         urlRefinRate = "http://www.nbrb.by/Services/XmlRefRate.aspx?ondate=";
     }
-
 
     @Override
     protected void parsingCurrRate(NodeList nodeList) {
@@ -47,6 +48,12 @@ public final class BLRconnect extends XMLconnect {
                             break;
                         case EU_ID:
                             rate.setEuRate(parseNode(RATE_NAME,node));
+                            break;
+                        case RU_ID:
+                            rate.setRuRate(parseNode(RATE_NAME,node));
+                            break;
+                        case UA_ID:
+                            rate.setUaRate(parseNode(RATE_NAME,node));
                             break;
                     }
                 }

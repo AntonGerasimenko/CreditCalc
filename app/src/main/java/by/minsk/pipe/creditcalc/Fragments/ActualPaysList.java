@@ -4,37 +4,30 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Logic.PayListAdapter;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.models.Credit;
 
 /**
  * Created by gerasimenko on 18.09.2015.
  */
-public final class ActualPays extends PayList {
+public final class ActualPaysList extends PayList {
 
     public static final String TAG = "ActualPays";
 
-    private int idCredit;
+    private Credit credit;
     private Button addPay;
 
-    public static ActualPays newInstance(int idCredit){
+    public static ActualPaysList newInstance(Credit credit){
 
-        ActualPays instance = new ActualPays();
-        instance.pays = DBservice.pay().getAll(idCredit);
-        instance.idCredit = idCredit;
-
+        ActualPaysList instance = new ActualPaysList();
+        instance.pays = DBservice.pay().getAll(credit.getId());
+        instance.credit = credit;
 
         return instance;
     }
@@ -57,6 +50,7 @@ public final class ActualPays extends PayList {
 
         currency = (Spinner) footer.findViewById(R.id.spinner);
         setSpinner();
+        currency.setSelection(credit.getCurrency());
     }
 
     @Override
@@ -80,8 +74,6 @@ public final class ActualPays extends PayList {
 
     @Override
     public void onClick(View v) {
-        showFragment.makePay(idCredit);
+        showFragment.makePay(credit.getId());
     }
-
-
 }

@@ -56,15 +56,16 @@ public abstract class PaysAdapter extends ArrayAdapter {
                 case EU:
                     return rate.getEuRate();
                 case RUR:
-                case BYR:
+                    return  rate.getRuRate();
                 case UA:
+                    return rate.getUaRate();
+                case BYR:
                 case UNKNOWN:
                     return 1;
             }
         }
         return 1;
     }
-
 
     protected abstract void init(View view);
     protected abstract void complete(Pay pay);

@@ -44,14 +44,16 @@ public class Actual implements OnActual {
     }
 
     @Override
-    public void getRate(final OnRateListener listener, final Currency currency) {
+    public void getRate(final OnRateListener listener, final Currency location) {
 
         final Rate[] rate = {new Rate()};
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Connect xmLconnect = XMLconnect.factory(currency);
+                Connect xmLconnect = XMLconnect.factory(location);
                 rate[0] = xmLconnect.getRate(new Date());
+                Rate lastRate = DBservice.rate().getLast();
+                if (rate[0].equals(lastRate)) rate[0] = lastRate;
                 Log.d("Rate","end thread");
             }
         });

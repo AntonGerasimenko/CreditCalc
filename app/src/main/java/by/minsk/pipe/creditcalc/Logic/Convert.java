@@ -47,10 +47,10 @@ public class Convert {
         Rate rate = pay.getRate();
         switch (currency) {
             case UA:
-                coeff = 1;
+                coeff = rate.getUaRate();
                 break;
             case RUR:
-                coeff = 1;
+                coeff = rate.getRuRate();
                 break;
             case USD:
                 coeff = rate.getUsaRate();

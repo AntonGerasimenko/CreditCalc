@@ -87,6 +87,8 @@ public abstract class PayList extends ListFragment implements View.OnClickListen
         overpay = (TextView) footer.findViewById(R.id.overpay);
         currency = (Spinner) footer.findViewById(R.id.currency);
 
+
+
         recalcTotal();
         setSpinner();
     }

@@ -15,6 +15,7 @@ public class Credit {
     @DatabaseField(dataType = DataType.STRING) private String target;
     @DatabaseField(dataType = DataType.DOUBLE) private double summa;
     @DatabaseField(dataType = DataType.INTEGER) private int currency;
+    @DatabaseField(dataType = DataType.INTEGER) private int location;
     @DatabaseField(dataType = DataType.DOUBLE) private double interestRate;
     @DatabaseField(dataType = DataType.LONG) private long startData;
     @DatabaseField(dataType = DataType.LONG) private long endData;
@@ -110,5 +111,13 @@ public class Credit {
 
     public void setCurrency(int currency) {
         this.currency = currency;
+    }
+
+    public int getLocation() {
+        return location;
+    }
+
+    public void setLocation(int location) {
+        this.location = location;
     }
 }

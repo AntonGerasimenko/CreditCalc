@@ -44,6 +44,7 @@ public class PayOperation {
 
     public boolean put(Pay pay) {
         try {
+            dao = DBManager.getInstance().getHelper().getPaysDao();
             dao.create(pay);
             return true;
         } catch (SQLException e) {

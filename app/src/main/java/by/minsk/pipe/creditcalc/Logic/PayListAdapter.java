@@ -1,15 +1,13 @@
 package by.minsk.pipe.creditcalc.Logic;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.List;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
 
 /**
  * Created by gerasimenko on 04.09.2015.

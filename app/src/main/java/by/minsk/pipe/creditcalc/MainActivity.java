@@ -1,36 +1,48 @@
 package by.minsk.pipe.creditcalc;
 
-
-
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+
+
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
+
 
 import by.minsk.pipe.creditcalc.Fragments.ActualPaysList;
 import by.minsk.pipe.creditcalc.Fragments.AllPaysList;
-import by.minsk.pipe.creditcalc.Fragments.CreditList;
-import by.minsk.pipe.creditcalc.Fragments.FragmentListener;
-import by.minsk.pipe.creditcalc.Fragments.MakeCredit;
-import by.minsk.pipe.creditcalc.Fragments.MakePay;
+
+
 import by.minsk.pipe.creditcalc.Fragments.PieChartFr;
-import by.minsk.pipe.creditcalc.Logic.Actual;
-import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.Presenter.MainPresenter;
+import by.minsk.pipe.creditcalc.MVP.View.MainView;
 
-public class MainActivity extends AppCompatActivity implements FragmentListener {
+public class MainActivity extends AppCompatActivity implements MainView {
 
+    private MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       if (savedInstanceState==null) makeCredit();//creditList();
+        presenter = new MainPresenter(this);
     }
 
+    @Override
+    protected void onStart() {
+
+        presenter.stop();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+
+        presenter.stop();
+        super.onStop();
+    }
 
     @Override
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
@@ -41,28 +53,21 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onBackPressed() {
 
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ActualPaysList.TAG);
+   /*     Fragment fragment = getSupportFragmentManager().findFragmentByTag(ActualPaysList.TAG);
         if (fragment != null && fragment.isVisible()) {
-            creditList();
+         //   creditList();
             return;
         }
         fragment = getSupportFragmentManager().findFragmentByTag(MakeCredit.TAG);
         if (fragment!=null && fragment.isVisible()) {
-            creditList();
+          //  creditList();
             return;
         }
         fragment = getSupportFragmentManager().findFragmentByTag(PieChartFr.TAG);
         if (fragment!=null && fragment.isVisible()) {
-            creditList();
+           // creditList();
             return;
         }
         fragment = getSupportFragmentManager().findFragmentByTag(AllPaysList.TAG);
@@ -70,12 +75,24 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
 
             super.onBackPressed();
             return;
-        }
+        }*/
 
         super.onBackPressed();
     }
 
     @Override
+    public void openFragment(Fragment fragment, String tag) {
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container,fragment,tag)
+                .commit();
+    }
+}
+
+
+
+
+/*@Override
     public void creditList() {
         Fragment fragment = new CreditList();
 
@@ -114,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     @Override
     public void calcAllPays(Credit credit) {
 
-        Fragment fragment = AllPaysList.newInstance(credit);
+        Fragment fragment = new AllPaysList();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
@@ -122,14 +139,6 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
         ft.addToBackStack(AllPaysList.TAG);
         ft.commit();
     }
-
-    @Override
-    public void showStatistic(Credit credit) {
-        Fragment fragment = new AllPaysList();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.abc_slide_in_top, R.anim.abc_slide_in_bottom);
-        ft.replace(R.id.temp_container, fragment, PieChartFr.TAG).commit();
-    }
-}
+*/
 
 

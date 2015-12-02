@@ -1,15 +1,16 @@
 package by.minsk.pipe.creditcalc.Logic;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 14.09.2015.
@@ -30,6 +31,7 @@ public final class AllPaysListAdapter extends PaysAdapter {
         super(context, resource, objects,currency);
         red = getContext().getResources().getColor(R.color.red);
         green = getContext().getResources().getColor(R.color.green);
+        Log.d("RATE","make adapter");
     }
 
     @Override
@@ -54,14 +56,17 @@ public final class AllPaysListAdapter extends PaysAdapter {
             exchRate = 1;
         }
 
+        Log.d("RATE","Balance "+pay.getBalance());
+
         balance.setText(Convert.money(pay.getBalance(),exchRate));
-        allPay.setText(Convert.money(pay.getPay(),exchRate));
+        allPay.setText(Convert.money(pay.getPay(), exchRate));
         interestPay.setText(Convert.money(pay.getInterestPay(),exchRate));
         deptPay.setText(Convert.money(pay.getDeptPay(),exchRate));
         date.setText(Convert.date(pay.getDate()));
     }
     @Override
     protected void init(View view) {
+
         balance = (TextView) view.findViewById(R.id.balance);
         allPay = (TextView) view.findViewById(R.id.all_pay);
         interestPay = (TextView) view.findViewById(R.id.interest_pay);

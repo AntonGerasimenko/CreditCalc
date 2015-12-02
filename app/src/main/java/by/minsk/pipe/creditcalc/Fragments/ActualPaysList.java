@@ -11,7 +11,7 @@ import android.widget.Spinner;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Logic.PayListAdapter;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
 
 /**
  * Created by gerasimenko on 18.09.2015.
@@ -35,7 +35,7 @@ public final class ActualPaysList extends PayList {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        ListAdapter adapter = new PayListAdapter(getActivity(),R.layout.short_pay_item,list);
+        ListAdapter adapter = new PayListAdapter(getActivity(),R.layout.short_pay_item, printList);
         setListAdapter(adapter);
 
         super.onActivityCreated(savedInstanceState);

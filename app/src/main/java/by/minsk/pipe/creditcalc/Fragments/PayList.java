@@ -14,36 +14,38 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import by.minsk.pipe.creditcalc.Logic.Convert;
 import by.minsk.pipe.creditcalc.Logic.CurrencySpinAdapter;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
 
 /**
  * Created by gerasimenko on 18.09.2015.
  */
 public abstract class PayList extends ListFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    protected List<Pay> pays;
-    protected List<Pay> list = new ArrayList<>();
-
     protected FragmentListener showFragment;
+
+    protected List<Pay> pays;
+    protected List<Pay> printList;
+
     protected View footer;
     protected View header;
 
-    protected TextView summa;
-    protected TextView allPays;
-    protected TextView overpay;
-
-    protected Spinner currency;
-
+    @Bind(R.id.summa)    TextView summa;
+    @Bind(R.id.all_pays) TextView allPays;
+    @Bind(R.id.overpay) TextView overpay;
+    @Bind(R.id.currency) Spinner currency;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         inflateHeater(inflater);
         copyList(Currency.BYR);
+
 
         if (!pays.isEmpty()) {
             int size = pays.size();
@@ -60,17 +62,16 @@ public abstract class PayList extends ListFragment implements View.OnClickListen
 
         showFragment = (FragmentListener) getActivity();
 
-        for (Pay pay:pays)
-            try {
-                list.add(pay.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-
         if (!pays.isEmpty())  contentHeader();
         getListView().addFooterView(footer);
 
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ButterKnife.unbind(this);
     }
 
     protected void setHeaderTitle(int id,String title){
@@ -81,13 +82,7 @@ public abstract class PayList extends ListFragment implements View.OnClickListen
     protected void inflateHeaderTotal(LayoutInflater inflater){
 
         footer = inflater.inflate(R.layout.total_pay,null);
-
-        summa = (TextView) footer.findViewById(R.id.summa);
-        allPays =  (TextView) footer.findViewById(R.id.all_pays);
-        overpay = (TextView) footer.findViewById(R.id.overpay);
-        currency = (Spinner) footer.findViewById(R.id.currency);
-
-
+        ButterKnife.bind(this,footer);
 
         recalcTotal();
         setSpinner();
@@ -102,7 +97,7 @@ public abstract class PayList extends ListFragment implements View.OnClickListen
     private double getAllPays() {
 
         double summa=0;
-        for (Pay pay:list) {
+        for (Pay pay:printList) {
             summa += pay.getPay();
         }
 
@@ -132,20 +127,20 @@ public abstract class PayList extends ListFragment implements View.OnClickListen
     }
 
     private void copyList(Currency currency) {
-        list.clear();
+        printList = new ArrayList<>();
 
         for (Pay pay:pays)
             try {
-                list.add(pay.clone());
+                printList.add(pay.clone());
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
-        recalc(currency,list);
+        recalc(currency,pays);
     }
 
     private void recalcTotal(){
 
-        double sum = list.get(0).getBalance();
+        double sum = pays.get(0).getBalance();
         summa.setText(Convert.money(sum));
 
         double allPa = getAllPays();

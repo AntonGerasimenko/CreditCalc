@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
 
 /**
  * Created by gerasimenko on 18.09.2015.

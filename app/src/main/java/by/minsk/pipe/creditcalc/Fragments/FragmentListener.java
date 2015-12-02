@@ -1,7 +1,6 @@
 package by.minsk.pipe.creditcalc.Fragments;
 
-import by.minsk.pipe.creditcalc.Logic.Actual;
-import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
 
 /**
  * Created by gerasimenko on 17.09.2015.

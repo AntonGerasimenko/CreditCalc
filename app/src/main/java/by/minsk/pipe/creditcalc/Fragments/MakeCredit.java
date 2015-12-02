@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,48 +20,45 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
+import butterknife.OnClick;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Logic.Convert;
 import by.minsk.pipe.creditcalc.Logic.CurrencySpinAdapter;
 import by.minsk.pipe.creditcalc.Logic.SeparNum;
-import by.minsk.pipe.creditcalc.MainActivity;
+import by.minsk.pipe.creditcalc.MVP.Presenter.MakeCreditPresenter;
+import by.minsk.pipe.creditcalc.MVP.View.MakeCreditView;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Currency;
-
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
 
 /**
  * Created by gerasimenko on 01.09.2015.
  */
-public class MakeCredit extends Fragment implements View.OnClickListener{
+public class MakeCredit extends Fragment implements View.OnClickListener, MakeCreditView{
 
     public static final String TAG = "MakeCredit";
 
-    @InjectView(R.id.image_credit)   Spinner imageCredit;
-    @InjectView(R.id.credit_target)   EditText targetCredit;
-    @InjectView(R.id.summa)  EditText summa;
-    @InjectView(R.id.end_termin)  TextView endLendingData;
-    @InjectView(R.id.begin_termin)  TextView beginLendingData;
-    @InjectView(R.id.percent)  EditText percent;
-    @InjectView(R.id.use_refin_rate)   CheckBox useRefinRate;
-    @InjectView(R.id.add_credit)  Button addCredit;
-    @InjectView(R.id.calculate_pays)  Button calculateAllPays;
-    @InjectView(R.id.currency)  Spinner currency;
+    @Bind(R.id.image_credit)   Spinner imageCredit;
+    @Bind(R.id.credit_target)   EditText targetCredit;
+    @Bind(R.id.summa)  EditText summa;
+    @Bind(R.id.end_termin)  TextView endLendingData;
+    @Bind(R.id.begin_termin)  TextView beginLendingData;
+    @Bind(R.id.percent)  EditText percent;
+    @Bind(R.id.use_refin_rate)   CheckBox useRefinRate;
 
-    private FragmentListener showFragment;
+    @Bind(R.id.currency)  Spinner currency;
 
-    private String[] dates;
+    private MakeCreditPresenter presenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.make_credit, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
-        addCredit.setOnClickListener(this);
-        calculateAllPays.setOnClickListener(this);
         summa.addTextChangedListener(new SeparNum(summa));
 
         ArrayAdapter<Currency> adapter = new CurrencySpinAdapter(getActivity(),R.layout.currency_spinner_item,Currency.getAllInstance());
@@ -76,59 +72,21 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        String end;
-        String begin;
+    public void onStop() {
 
-        showFragment = (FragmentListener) getActivity();
-
-        if (savedInstanceState == null) {
-            if (dates!= null) {
-
-                begin = dates[0];
-                end = dates[1];
-                dates = null;
-            } else {
-                end = begin = getResources().getString(R.string.enter_term);
-            }
-        } else {
-            end = savedInstanceState.getString("endLendingData");
-            begin = savedInstanceState.getString("beginLendingData");
-        }
-
-        endLendingData.setText(end);
-        beginLendingData.setText(begin);
-
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onPause() {
-
-        dates = new String[]{beginLendingData.getText().toString(), endLendingData.getText().toString()};
-        super.onPause();
+        ButterKnife.unbind(this);
+        super.onStop();
     }
 
     @Override
     public void onClick(View v) {
-        Credit credit;
+
         DatePickerDialog dialog;
         Calendar calendar;
         int year;
         int month;
         int day;
         switch (v.getId()) {
-            case R.id.calculate_pays:
-                credit = collectCredit();
-                if (credit.isEmpty()) return;
-                showFragment.calcAllPays(credit);
-                break;
-            case R.id.add_credit:
-                credit = collectCredit();
-                if (credit.isEmpty()) return;
-                DBservice.credit().create(credit);
-                showFragment.creditList();
-                break;
             case R.id.begin_termin:
                 calendar = Calendar.getInstance();
                 year = calendar.get(Calendar.YEAR);
@@ -164,17 +122,27 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    @OnClick({R.id.add_credit,R.id.calculate_pays}) public void clickBtns(View view) {
+        Credit credit =  new Credit();
 
-        outState.putString("beginLendingData",beginLendingData.getText().toString());
-        outState.putString("endLendingData",endLendingData.getText().toString());
-        super.onSaveInstanceState(outState);
+        credit.setTarget(String.valueOf(targetCredit.getText()));
+        credit.setDate(Convert.date(beginLendingData.getText()));
+        credit.setEndData(Convert.date(endLendingData.getText()));
+        credit.setCurrency(currency.getSelectedItemPosition());
+        credit.setInterestRate(Convert.money(percent.getText()));
+        credit.setLocation(Currency.BYR.getInt());
+        credit.setSumma(Convert.money(summa.getText()));
+
+        switch (view.getId()) {
+            case R.id.add_credit:
+                presenter.addCredit(credit);
+                break;
+            case R.id.calculate_pays:
+                presenter.calcCredit(credit);
+        }
     }
 
     private Credit collectCredit(){
-
-        if (true) return getDemo();
 
         Credit credit = new Credit();
         long now  = new Date().getTime();
@@ -182,12 +150,14 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
         credit.setTarget(String.valueOf(targetCredit.getText()));
 
         double creditSumm = Convert.money(summa.getText());
+
         if (creditSumm == 0) {
             Toast.makeText(getActivity(),R.string.err_credit_null,Toast.LENGTH_LONG).show();
             return Credit.empty();
         }
         credit.setSumma(creditSumm);
-        credit.setCurrency(Currency.BYR.getInt());
+
+       /* credit.setCurrency(Currency.BYR.getInt());*/
 
         String string = String.valueOf(percent.getText());
         if (string.isEmpty()) {
@@ -217,8 +187,6 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
         credit.setCurrency(curr.getInt());
         credit.setLocation(Currency.BYR.getInt());
 
-
-
         return credit;
     }
 
@@ -229,25 +197,25 @@ public class MakeCredit extends Fragment implements View.OnClickListener{
         return 0;
     }
 
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         return super.onContextItemSelected(item);
     }
 
-    Credit getDemo() {
+    @Override
+    public Credit getCredit() {
+        return null;
+    }
 
-        Credit credit = new Credit();
-        credit.setTarget("archive");
-        credit.setLocation(Currency.BYR.getInt());
+    @Override
+    public void setCredit(Credit credit) {
 
-        credit.setCurrency(Currency.USD.getInt());
+        targetCredit.setText(credit.getTarget());
+        summa.setText(Convert.money(credit.getSumma()));
+        beginLendingData.setText(Convert.money(credit.getStartData()));
+        endLendingData.setText(Convert.money(credit.getEndData()));
+        percent.setText(Convert.money(credit.getInterestRate()));
 
-        credit.setDate(1445000855873l);
-        credit.setEndData(1476623248777l);
-        credit.setInterestRate(12.0);
-        credit.setSumma(1200);
-
-        return credit;
+        currency.setSelection(credit.getCurrency());
     }
 }

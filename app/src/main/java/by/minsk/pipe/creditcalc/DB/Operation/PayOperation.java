@@ -8,8 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import by.minsk.pipe.creditcalc.DB.DBManager;
-import by.minsk.pipe.creditcalc.DB.DBservice;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
 
 /**
  * Created by gerasimenko on 04.09.2015.

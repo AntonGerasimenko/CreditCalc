@@ -20,8 +20,9 @@ import android.widget.Toast;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooLarge;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
@@ -30,14 +31,13 @@ import by.minsk.pipe.creditcalc.Logic.Actual;
 import by.minsk.pipe.creditcalc.Logic.Convert;
 import by.minsk.pipe.creditcalc.Logic.SeparNum;
 import by.minsk.pipe.creditcalc.Logic.Payment;
-import by.minsk.pipe.creditcalc.Networks.BLRconnect;
 import by.minsk.pipe.creditcalc.Networks.Connect;
 import by.minsk.pipe.creditcalc.Networks.XMLconnect;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 31.08.2015.
@@ -46,16 +46,16 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
 
     public static final String TAG = "CalcPay";
 
-    @InjectView(R.id.balance_currency_spinner) Spinner balanceCurrency;
-    @InjectView(R.id.credit_target) TextView target;
-    @InjectView(R.id.termin)        TextView termin;
-    @InjectView(R.id.interest_rate) TextView intetestRate;
-    @InjectView(R.id.balance)       TextView balance;
-    @InjectView(R.id.overpay)       TextView overpay;
-    @InjectView(R.id.next_pay)      EditText nextPay;
-    @InjectView(R.id.curr1)         TextView smallCurr;
-    @InjectView(R.id.make_pay)      Button makePay;
-    @InjectView(R.id.progressBar) ProgressBar progressBar;
+    @Bind(R.id.balance_currency_spinner) Spinner balanceCurrency;
+    @Bind(R.id.credit_target) TextView target;
+    @Bind(R.id.termin)        TextView termin;
+    @Bind(R.id.interest_rate) TextView intetestRate;
+    @Bind(R.id.balance)       TextView balance;
+    @Bind(R.id.overpay)       TextView overpay;
+    @Bind(R.id.next_pay)      EditText nextPay;
+    @Bind(R.id.curr1)         TextView smallCurr;
+    @Bind(R.id.make_pay)      Button makePay;
+    @Bind(R.id.progressBar) ProgressBar progressBar;
 
     private Payment payment;
     private Pay lastPay;
@@ -70,7 +70,6 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
 
         final MakePay instance = new MakePay();
 
-        instance.payment = new Payment(actual);
         final Pay pay = DBservice.pay().getLast(id);
 
         if (pay.isEmpty()) {
@@ -109,7 +108,7 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.calc_pay, container, false);
-        ButterKnife.inject(this, view);
+        /*ButterKnife.inject(this, view);*/
 
         setValues();
 
@@ -145,9 +144,6 @@ public class MakePay extends Fragment implements View.OnClickListener, AdapterVi
 
 
         final double sum = Convert.money(nextPay.getText()) * exRate;
-
-
-
 
         progressBar.setVisibility(View.VISIBLE);
         makePay.setVisibility(View.GONE);

@@ -5,13 +5,11 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import by.minsk.pipe.creditcalc.DB.DBManager;
 import by.minsk.pipe.creditcalc.DB.DBservice;
-import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
 
 /**
  * Created by gerasimenko on 04.09.2015.

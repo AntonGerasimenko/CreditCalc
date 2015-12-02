@@ -5,11 +5,10 @@ import android.text.Editable;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 03.09.2015.

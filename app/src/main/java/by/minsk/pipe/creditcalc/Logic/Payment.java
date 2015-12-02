@@ -1,7 +1,5 @@
 package by.minsk.pipe.creditcalc.Logic;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,10 +7,10 @@ import java.util.List;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.IsTooLarge;
 import by.minsk.pipe.creditcalc.Exception.IsTooSmall;
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 28.08.2015.
@@ -25,11 +23,16 @@ public class Payment {
     private Actual actual;
 
 
+    private Credit credit;
+    private Currency mainCurrency;
+    private Currency location;
 
-
-
-    public Payment(Actual actual) {
+    public Payment(Actual actual, Credit credit) {
         this.actual = actual;
+        this.credit = credit;
+
+        mainCurrency = Currency.getInstance(credit.getCurrency());
+        location = Currency.getInstance(credit.getLocation());
     }
 
     public void make(double sum, Pay lastPay,final ResultAddPay result) throws IsTooSmall, IsTooLarge {
@@ -81,8 +84,7 @@ public class Payment {
         return minPay;
     }
 
-
-    public  List<Pay> calculateAllCredit(Credit credit) {
+    public  List<Pay> calculateAllCredit() {
 
         final Calendar calendar = Calendar.getInstance();
         long size = (-1)*periodDays(credit.getEndData());
@@ -105,8 +107,9 @@ public class Payment {
             public void getRate(Rate rate) {
                 pay1.setRate(rate);
                 pays.add(pay1);
+               // recalcPay(pay1);
             }
-        },Currency.getInstance(credit.getCurrency()));
+        },Currency.getInstance(credit.getLocation()));
 
         for (int i=0;i<creditMonth;i++){
             Pay pay = new Pay();
@@ -125,14 +128,17 @@ public class Payment {
             double interestPay = calculateInterest(balance,percent,DAYS_IN_MONTH);
 
             pay.setInterestPay(interestPay);
-            pay.setPay(deptPay+interestPay);
+            pay.setPay(deptPay + interestPay);
 
             balance = balance - deptPay;
             pay.setBalance(balance);
             pay.setCredit(credit);
             pay.setRate(pay1.getRate());
+           // recalcPay(pay);
             pays.add(pay);
         }
+
+        for (Pay pay:pays) recalcPay(pay);
 
         return pays;
     }
@@ -181,6 +187,31 @@ public class Payment {
     public interface ResultAddPay {
 
         void result();
+    }
+
+    private void recalcPay(Pay pay) {
+        switch (location) {
+            case BYR:
+            case USD:
+            case BTK:
+            case EU:
+            case RUR:
+            case UA:
+                Rate rate = pay.getRate();
+                double exRate = rate.getExchangeRate(mainCurrency);
+
+                double balance  = (pay.getBalance()*exRate);
+                double paySum = pay.getPay() *exRate;
+                double overpayment = pay.getOverpayment()*exRate;
+                double interestRate = pay.getInterestPay()*exRate;
+
+                pay.setBalance(balance);
+
+                pay.setPay(paySum);
+                pay.setOverpayment(overpayment);
+                pay.setInterestPay(interestRate);
+                break;
+        }
     }
 }
 

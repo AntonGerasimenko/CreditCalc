@@ -1,4 +1,4 @@
-package by.minsk.pipe.creditcalc.models;
+package by.minsk.pipe.creditcalc.MVP.models;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by gerasimenko on 28.08.2015.
  */
 @DatabaseTable(tableName="Credits")
-public class Credit {
+public class Credit  {
     @DatabaseField(generatedId = true) private int id;
     @DatabaseField(dataType = DataType.LONG) private long date;
 
@@ -120,4 +120,5 @@ public class Credit {
     public void setLocation(int location) {
         this.location = location;
     }
+
 }

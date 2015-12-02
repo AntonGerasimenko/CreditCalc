@@ -2,7 +2,7 @@ package by.minsk.pipe.creditcalc.Networks;
 
 import java.util.Date;
 
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 25.09.2015.

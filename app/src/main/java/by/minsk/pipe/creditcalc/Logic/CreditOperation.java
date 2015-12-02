@@ -6,7 +6,7 @@ import java.util.Date;
 
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Exception.MakeNewCreditFault;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
 
 /**
  * Created by gerasimenko on 01.09.2015.
@@ -28,7 +28,7 @@ public class CreditOperation {
 
         Pay pay = new Pay();
         pay.newRecord(sum, 0, 0);
-        by.minsk.pipe.creditcalc.models.Credit credit = new by.minsk.pipe.creditcalc.models.Credit();
+        by.minsk.pipe.creditcalc.MVP.models.Credit credit = new by.minsk.pipe.creditcalc.MVP.models.Credit();
         credit.setDate(now.getTime());
         credit.setStartData(now.getTime());
         credit.setEndData(endLendingDate.getTime());

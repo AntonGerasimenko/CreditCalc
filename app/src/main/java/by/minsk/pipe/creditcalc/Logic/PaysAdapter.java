@@ -9,9 +9,9 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 14.09.2015.
@@ -42,12 +42,7 @@ public abstract class PaysAdapter extends ArrayAdapter {
         return convertView;
     }
 
-    public void setCurrency(Currency currency){
-        assert (currency!=null);
-        this.currency = currency;
-    }
-
-    protected double getExchangeRate(Rate rate){
+   protected double getExchangeRate(Rate rate){
 
         if (rate!= null) {
             switch (currency){

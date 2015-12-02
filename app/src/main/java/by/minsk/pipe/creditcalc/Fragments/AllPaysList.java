@@ -1,83 +1,79 @@
 package by.minsk.pipe.creditcalc.Fragments;
 
-import android.content.res.Resources;
+import android.app.Fragment;
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
-import by.minsk.pipe.creditcalc.Logic.Actual;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import by.minsk.pipe.creditcalc.Logic.AllPaysListAdapter;
-import by.minsk.pipe.creditcalc.Logic.Payment;
+import by.minsk.pipe.creditcalc.MVP.Presenter.AllPaysPresenter;
+import by.minsk.pipe.creditcalc.MVP.View.ListPaysView;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Total;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
 
 
 /**
  * Created by gerasimenko on 18.09.2015.
  */
-public final class AllPaysList extends PayList {
+public final class AllPaysList extends Fragment implements ListPaysView {
 
     public static final String TAG = "CreditAllPays";
-    private Credit credit;
 
-    public static AllPaysList newInstance(Credit credit) {
-        AllPaysList instance = new AllPaysList();
+    private AllPaysPresenter presenter;
 
-        Payment payment = new Payment(new Actual());
-        instance.pays = payment.calculateAllCredit(credit);
-        instance.credit = credit;
+    @Bind(R.id.pays_list)
+    ListView listView;
 
-        return instance;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view  = inflater.inflate(R.layout.pay_list,container,false);
+        ButterKnife.bind(this,view);
+
+        presenter = new AllPaysPresenter();
+        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void showPays(List<Pay> pays, Currency currency) {
 
-        while (list.size()>1) {
-            list.remove(1);
-        }
-
-        ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays, list, Currency.getInstance(credit.getCurrency()));
-        setListAdapter(adapter);
-
-
-        super.onActivityCreated(savedInstanceState);
-        if (currency!= null)        currency.setSelection(credit.getCurrency());
+        ListAdapter adapter = new AllPaysListAdapter(getActivity(), R.layout.all_pays, pays, currency);
+        listView.setAdapter(adapter);
     }
 
     @Override
-    protected void inflateFooter(LayoutInflater inflater) {
+    public void recalcCurrency(Total total) {
+
+
 
     }
 
     @Override
-    protected void inflateHeater(LayoutInflater inflater) {
-
-        header = inflater.inflate(R.layout.short_pay_item, null);
+    public void onStart() {
+        presenter.start();
+        super.onStart();
     }
 
     @Override
-    protected void contentHeader() {
-        getListView().addHeaderView(header);
-
-        Resources resources = getActivity().getResources();
-
-        setHeaderTitle(R.id.balance,resources.getString(R.string.balance));
-        setHeaderTitle(R.id.last_pay,resources.getString(R.string.pay));
-        setHeaderTitle(R.id.overpay,resources.getString(R.string.percent_pay));
-        setHeaderTitle(R.id.percent,resources.getString(R.string.body_credit));
-        setHeaderTitle(R.id.date, resources.getString(R.string.date));
+    public void onStop() {
+        presenter.stop();
+        super.onStop();
     }
 
     @Override
-    public void onClick(View v) {
-
-    }
-
-    public Credit getCredit(){
-
-        return credit;
+    public void onDestroyView() {
+        ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 }

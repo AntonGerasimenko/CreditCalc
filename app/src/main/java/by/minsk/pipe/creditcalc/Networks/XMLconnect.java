@@ -1,6 +1,5 @@
 package by.minsk.pipe.creditcalc.Networks;
 
-import android.app.Activity;
 import android.util.Log;
 
 import org.w3c.dom.Document;
@@ -16,8 +15,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import by.minsk.pipe.creditcalc.DB.DBservice;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 25.09.2015.

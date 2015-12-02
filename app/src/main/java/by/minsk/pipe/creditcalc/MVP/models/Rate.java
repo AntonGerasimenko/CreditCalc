@@ -1,4 +1,4 @@
-package by.minsk.pipe.creditcalc.models;
+package by.minsk.pipe.creditcalc.MVP.models;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;

@@ -2,8 +2,8 @@ package by.minsk.pipe.creditcalc.Logic;
 
 import java.util.List;
 
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
 
 /**
  * Created by gerasimenko on 28.08.2015.

@@ -7,38 +7,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import by.minsk.pipe.creditcalc.DB.DBservice;
 import by.minsk.pipe.creditcalc.Logic.CreditList.CreditListListener;
 import by.minsk.pipe.creditcalc.Logic.CreditListAdapter;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
 
 /**
  * Created by gerasimenko on 02.09.2015.
  */
-public class CreditList extends ListFragment implements View.OnClickListener, CreditListListener{
+public class CreditList extends ListFragment implements CreditListListener{
 
     public static final String TAG = "CreditList";
+
     private List<Credit> credits;
     private FragmentListener showFragment;
-
     private View footerView;
-    private Button addButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         credits = DBservice.credit().getAll();
 
+        footerView = inflater.inflate(R.layout.add_credit_footer,null);
+        ButterKnife.bind(this,footerView);
+
         ListAdapter adapter = new CreditListAdapter(getActivity(), R.layout.short_credit_item,credits,this);
         setListAdapter(adapter);
 
-        footerView = inflater.inflate(R.layout.add_credit_footer,null);
-        addButton = (Button) footerView.findViewById(R.id.add_credit);
-        addButton.setOnClickListener(this);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -57,16 +58,17 @@ public class CreditList extends ListFragment implements View.OnClickListener, Cr
         super.onListItemClick(l, v, position, id);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.add_credit:
+    @OnClick(R.id.add_credit)
+    public void addCredit(){
 
-                showFragment.makeCredit();
-                break;
-        }
+        showFragment.makeCredit();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ButterKnife.unbind(this);
+    }
 
     @Override
     public void delete(int position) {

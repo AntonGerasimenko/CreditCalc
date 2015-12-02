@@ -10,9 +10,9 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 19.08.2015.

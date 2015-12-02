@@ -1,6 +1,6 @@
 package by.minsk.pipe.creditcalc.Logic;
 
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 28.08.2015.

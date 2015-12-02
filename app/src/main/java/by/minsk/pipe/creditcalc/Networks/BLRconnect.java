@@ -1,13 +1,10 @@
 package by.minsk.pipe.creditcalc.Networks;
 
-import android.app.Activity;
-
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 26.08.2015.

@@ -9,12 +9,11 @@ import java.util.List;
 
 import by.minsk.pipe.creditcalc.DB.DBManager;
 import by.minsk.pipe.creditcalc.DB.DBservice;
-import by.minsk.pipe.creditcalc.Networks.BLRconnect;
 import by.minsk.pipe.creditcalc.Networks.Connect;
 import by.minsk.pipe.creditcalc.Networks.XMLconnect;
-import by.minsk.pipe.creditcalc.models.Currency;
-import by.minsk.pipe.creditcalc.models.Pay;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 
 /**

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import by.minsk.pipe.creditcalc.DB.DBManager;
-import by.minsk.pipe.creditcalc.models.Rate;
+import by.minsk.pipe.creditcalc.MVP.models.Rate;
 
 /**
  * Created by gerasimenko on 04.09.2015.

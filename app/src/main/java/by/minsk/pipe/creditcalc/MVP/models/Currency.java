@@ -1,4 +1,4 @@
-package by.minsk.pipe.creditcalc.models;
+package by.minsk.pipe.creditcalc.MVP.models;
 
 import java.util.ArrayList;
 import java.util.List;

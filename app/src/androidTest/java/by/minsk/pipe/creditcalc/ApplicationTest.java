@@ -1,18 +1,12 @@
 package by.minsk.pipe.creditcalc;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
-
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
 import java.util.Calendar;
-import java.util.List;
 
-import by.minsk.pipe.creditcalc.Logic.Actual;
-import by.minsk.pipe.creditcalc.Logic.Payment;
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Pay;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Pay;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
@@ -32,8 +26,6 @@ public class ApplicationTest extends /*ApplicationTestCase<Application>*/ TestCa
     protected void setUp() throws Exception {
 
 
-        Payment payment = new Payment(new Actual());
-        List<Pay> pays = payment.calculateAllCredit(makeCredit(12000000,15,3));
 
 
 

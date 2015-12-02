@@ -20,8 +20,9 @@ import com.github.mikephil.charting.utils.PercentFormatter;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import by.minsk.pipe.creditcalc.R;
 
 /**
@@ -33,7 +34,7 @@ public class PieChartFr extends Fragment {
     private PieChart mChart;
     private FragmentListener showFragment;
 
-    @InjectView(R.id.pie_title)    TextView title;
+    @Bind(R.id.pie_title)    TextView title;
 
 
     @Nullable
@@ -41,7 +42,7 @@ public class PieChartFr extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.pie_chart, container, false);
-        ButterKnife.inject(this, view);
+        /*ButterKnife.inject(this, view);*/
         return view;
     }
 

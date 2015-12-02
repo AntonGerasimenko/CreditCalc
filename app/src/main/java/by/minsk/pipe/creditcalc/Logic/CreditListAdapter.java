@@ -9,11 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
-import by.minsk.pipe.creditcalc.DB.DBservice;
+
 import by.minsk.pipe.creditcalc.Logic.CreditList.CreditListListener;
 import by.minsk.pipe.creditcalc.R;
-import by.minsk.pipe.creditcalc.models.Credit;
-import by.minsk.pipe.creditcalc.models.Currency;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
+import by.minsk.pipe.creditcalc.MVP.models.Currency;
 
 /**
  * Created by gerasimenko on 04.09.2015.

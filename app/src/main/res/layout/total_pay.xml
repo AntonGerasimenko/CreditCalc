@@ -70,7 +70,6 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/overpay" />
         </LinearLayout>
-
     </LinearLayout>
 
     <Spinner

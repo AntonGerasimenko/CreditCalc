@@ -21,18 +21,29 @@ public class Convert {
 
     public static long date(CharSequence text) {
 
-        String without = text.toString().substring(5);
-        int year = Integer.decode(text.toString().substring(0, 4));
-        int pos = without.indexOf(".");
+     /*   if (text == null || text.length()==0) return 0;
 
-        int month = Integer.decode(without.substring(0, pos));
+        if (text.charAt(0)=='(') {
 
-        without = without.substring(pos+1);
+            if ('(??.??.')
 
-        int day = Integer.decode(without);
+            String without = text.toString().substring(1,text.length()-1);
+            int pos = text.toString().indexOf('.');
+            int month = Integer.decode(without.substring(0, pos));
+            int year = Integer.decode(without.substring(pos, without.length()));
+            int day = Integer.decode(without);
 
-       calendar.set(year,month,day);
-       return calendar.getTimeInMillis();
+
+
+            calendar.set(year,month,day);
+            return calendar.getTimeInMillis();
+        }
+*/
+
+
+
+
+        return 0;
     }
 
     public static String date(int year,int month, int day) {

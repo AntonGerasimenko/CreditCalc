@@ -2,6 +2,7 @@ package by.minsk.pipe.creditcalc.MVP.Presenter;
 
 import android.app.Fragment;
 
+import by.minsk.pipe.creditcalc.Fragments.MakeCredit;
 import by.minsk.pipe.creditcalc.MVP.View.MainView;
 
 /**
@@ -12,10 +13,6 @@ public class MainPresenter extends BasePresenter {
 
     private MainView mView;
 
-
-
-
-
     public MainPresenter(MainView mView) {
         this.mView = mView;
     }
@@ -23,10 +20,8 @@ public class MainPresenter extends BasePresenter {
     @Override
     public void start() {
 
-        Fragment fragment = new
-
-
-        mView.openFragment();
+        Fragment fragment = new MakeCredit();
+        mView.openFragment(fragment,MakeCredit.TAG);
     }
 
     @Override

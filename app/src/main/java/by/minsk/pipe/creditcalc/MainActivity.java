@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onStart() {
 
-        presenter.stop();
+        presenter.start();
         super.onStart();
     }
 
@@ -86,11 +87,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container,fragment,tag)
                 .commit();
+        Log.d("Fragment", "openFragment: "+ tag);
     }
 }
-
-
-
 
 /*@Override
     public void creditList() {

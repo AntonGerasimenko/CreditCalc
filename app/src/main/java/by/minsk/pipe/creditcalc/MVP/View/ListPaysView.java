@@ -2,6 +2,7 @@ package by.minsk.pipe.creditcalc.MVP.View;
 
 import java.util.List;
 
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
 import by.minsk.pipe.creditcalc.MVP.models.Currency;
 import by.minsk.pipe.creditcalc.MVP.models.Pay;
 import by.minsk.pipe.creditcalc.MVP.models.Total;

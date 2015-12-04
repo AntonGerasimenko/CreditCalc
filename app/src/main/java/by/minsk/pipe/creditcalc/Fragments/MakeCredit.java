@@ -27,6 +27,7 @@ import by.minsk.pipe.creditcalc.Logic.CurrencySpinAdapter;
 import by.minsk.pipe.creditcalc.Logic.SeparNum;
 import by.minsk.pipe.creditcalc.Logic.convert.MyDates;
 import by.minsk.pipe.creditcalc.MVP.Presenter.MakeCreditPresenter;
+import by.minsk.pipe.creditcalc.MVP.View.FragmentPresenter;
 import by.minsk.pipe.creditcalc.MVP.View.MakeCreditView;
 import by.minsk.pipe.creditcalc.R;
 import by.minsk.pipe.creditcalc.MVP.models.Credit;
@@ -49,6 +50,15 @@ public class MakeCredit extends Fragment implements MakeCreditView{
     @Bind(R.id.currency)        Spinner currency;
 
     private MakeCreditPresenter presenter;
+    private FragmentPresenter mainPresenter;
+
+
+    public static Fragment getInstance(FragmentPresenter mainPresenter) {
+
+        MakeCredit instance = new MakeCredit();
+        instance.mainPresenter = mainPresenter;
+        return instance;
+    }
 
     @Nullable
     @Override
@@ -64,7 +74,7 @@ public class MakeCredit extends Fragment implements MakeCreditView{
 
         Log.d("Fragment", "CreateView MakeCredit");
 
-        presenter = new MakeCreditPresenter(this);
+        presenter = new MakeCreditPresenter(this,mainPresenter);
 
         return view;
     }

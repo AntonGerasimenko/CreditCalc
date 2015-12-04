@@ -11,11 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 
-import by.minsk.pipe.creditcalc.Fragments.ActualPaysList;
-import by.minsk.pipe.creditcalc.Fragments.AllPaysList;
-
-
-import by.minsk.pipe.creditcalc.Fragments.PieChartFr;
 import by.minsk.pipe.creditcalc.MVP.Presenter.MainPresenter;
 import by.minsk.pipe.creditcalc.MVP.View.MainView;
 

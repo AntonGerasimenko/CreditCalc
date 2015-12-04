@@ -10,12 +10,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import by.minsk.pipe.creditcalc.Logic.AllPaysListAdapter;
-import by.minsk.pipe.creditcalc.MVP.Presenter.AllPaysPresenter;
+import by.minsk.pipe.creditcalc.MVP.Presenter.CalcPaysPresenter;
 import by.minsk.pipe.creditcalc.MVP.View.ListPaysView;
+import by.minsk.pipe.creditcalc.MVP.models.Credit;
 import by.minsk.pipe.creditcalc.MVP.models.Pay;
 import by.minsk.pipe.creditcalc.MVP.models.Total;
 import by.minsk.pipe.creditcalc.R;
@@ -25,14 +25,23 @@ import by.minsk.pipe.creditcalc.MVP.models.Currency;
 /**
  * Created by gerasimenko on 18.09.2015.
  */
-public final class AllPaysList extends Fragment implements ListPaysView {
+public final class CalcPays extends Fragment implements ListPaysView {
 
     public static final String TAG = "CreditAllPays";
 
-    private AllPaysPresenter presenter;
+    private CalcPaysPresenter presenter;
+    private Credit credit;
+
 
     @Bind(R.id.pays_list)
     ListView listView;
+
+    public static Fragment getInstance(Credit credit){
+        CalcPays instance = new CalcPays();
+        instance.credit = credit;
+
+        return instance;
+    }
 
 
     @Override
@@ -41,7 +50,7 @@ public final class AllPaysList extends Fragment implements ListPaysView {
         View view  = inflater.inflate(R.layout.pay_list,container,false);
         ButterKnife.bind(this,view);
 
-        presenter = new AllPaysPresenter();
+        presenter = new CalcPaysPresenter(this,credit);
         return view;
     }
 

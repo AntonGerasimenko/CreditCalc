@@ -7,6 +7,7 @@ import android.widget.DatePicker;
 import java.util.Calendar;
 
 import by.minsk.pipe.creditcalc.Logic.Convert;
+import by.minsk.pipe.creditcalc.MVP.View.FragmentPresenter;
 import by.minsk.pipe.creditcalc.MVP.View.MakeCreditView;
 import by.minsk.pipe.creditcalc.MVP.models.Credit;
 import by.minsk.pipe.creditcalc.MVP.models.Currency;
@@ -18,10 +19,11 @@ import by.minsk.pipe.creditcalc.R;
 public class MakeCreditPresenter extends BasePresenter {
 
     private MakeCreditView view;
+    private FragmentPresenter mainPresenter;
 
-    public MakeCreditPresenter(MakeCreditView view) {
+    public MakeCreditPresenter(MakeCreditView view,FragmentPresenter mainPresenter) {
         this.view = view;
-
+        this.mainPresenter = mainPresenter;
     }
 
     @Override
@@ -38,17 +40,13 @@ public class MakeCreditPresenter extends BasePresenter {
         if (checkValidCredit(credit)) {
 
 
-
-
         }
     }
 
     public void calcCredit(Credit credit) {
         if (checkValidCredit(credit)) {
 
-
-
-
+            mainPresenter.openCalcCredit(credit);
         }
     }
 
